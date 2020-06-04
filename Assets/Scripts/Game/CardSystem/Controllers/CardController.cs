@@ -1,5 +1,6 @@
 ﻿using Config;
 using Game.Managers;
+using Game.View;
 using NaughtyBezierCurves;
 using UnityEngine;
 using Zenject;
@@ -10,15 +11,20 @@ namespace Game.CardSystem.Controllers
     {
         private BezierCurve3D _bezierCurve;
         private CardPoolManager _cardPoolManager;
+
+        private PlayerView _playerView;
         
         [Inject]
-        private void OnInstaller(CardPoolManager cardPoolManager)
+        private void OnInstaller(CardPoolManager cardPoolManager, PlayerView playerView)
         {
             _cardPoolManager = cardPoolManager;
+            _playerView = playerView;
         }
         
         private void Awake()
         {
+            _playerView.Test();
+            
             _bezierCurve = GetComponentInChildren<BezierCurve3D>();
 
             float rotationZ = 55; //DegreeDiff
