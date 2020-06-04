@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Config;
 using Game.CardSystem.Model;
+using Utils;
 
 namespace Game.DeckSystem.Managers
 {
@@ -34,6 +35,7 @@ namespace Game.DeckSystem.Managers
 
         public void WithdrawCard()
         {
+            var card = _cardDatas.GetRandomElementFromList();
             
         }
     }

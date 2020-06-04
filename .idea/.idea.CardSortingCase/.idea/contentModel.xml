@@ -19,6 +19,18 @@
             </e>
             <e p="readme.txt" t="Include" />
           </e>
+          <e p="NaughtyBezierCurves-1.0.0" t="Include">
+            <e p="Scripts" t="Include">
+              <e p="Core" t="Include">
+                <e p="BezierCurve3D.cs" t="Include" />
+                <e p="BezierPoint3D.cs" t="Include" />
+              </e>
+              <e p="Editor" t="Include">
+                <e p="BezierCurve3DEditor.cs" t="Include" />
+                <e p="BezierPoint3DEditor.cs" t="Include" />
+              </e>
+            </e>
+          </e>
         </e>
         <e p="Plugins" t="Include">
           <e p="Zenject" t="Include">
@@ -464,12 +476,19 @@
               <e p="GameManager.cs" t="Include" />
             </e>
           </e>
+          <e p="Helpers" t="Include">
+            <e p="Utils" t="Include">
+              <e p="OnurExtensionMethods.cs" t="Include" />
+            </e>
+          </e>
           <e p="Installers" t="Include">
             <e p="GameInstaller.cs" t="Include" />
           </e>
         </e>
       </e>
       <e p="CardSortingCase.sln" t="IncludeFlat" />
+      <e p="NaughtyBezierCurves.Core.csproj" t="IncludeRecursive" />
+      <e p="NaughtyBezierCurves.Editor.csproj" t="IncludeRecursive" />
       <e p="obj" t="ExcludeRecursive" />
       <e p="packages" t="ExcludeRecursive" />
       <e p="Temp\bin" t="ExcludeRecursive" />
