@@ -1,5 +1,7 @@
 using Config;
 using Game.CardSystem.Base;
+using Game.CardSystem.Managers;
+using Game.DeckSystem.Managers;
 using Game.Managers;
 using UnityEngine;
 using Zenject;
@@ -15,7 +17,10 @@ namespace Installers
         
         public override void InstallBindings()
         {
-            Container.BindMemoryPool<CardBase,PoolManager>().WithInitialSize(GameConfig.INITIAL_POOLITEM_COUNT).
+            Container.Bind<CardManager>().AsSingle().NonLazy();
+            Container.Bind<DeckManager>().AsSingle().NonLazy();
+            
+            Container.BindMemoryPool<CardBase,CardPoolManager>().WithInitialSize(GameConfig.INITIAL_POOLITEM_COUNT).
                 FromComponentInNewPrefabResource(CARD_PREFAB_PATH).UnderTransform(_poolManager);
         }
     }

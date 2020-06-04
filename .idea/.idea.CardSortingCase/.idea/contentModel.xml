@@ -444,13 +444,24 @@
               <e p="Base" t="Include">
                 <e p="CardBase.cs" t="Include" />
               </e>
-              <e p="Data" t="Include">
+              <e p="Controllers" t="Include">
+                <e p="CardController.cs" t="Include" />
+              </e>
+              <e p="Managers" t="Include">
+                <e p="CardManager.cs" t="Include" />
+              </e>
+              <e p="Model" t="Include">
                 <e p="CardData.cs" t="Include" />
               </e>
             </e>
+            <e p="DeckSystem" t="Include">
+              <e p="Managers" t="Include">
+                <e p="DeckManager.cs" t="Include" />
+              </e>
+            </e>
             <e p="Managers" t="Include">
+              <e p="CardPoolManager.cs" t="Include" />
               <e p="GameManager.cs" t="Include" />
-              <e p="PoolManager.cs" t="Include" />
             </e>
           </e>
           <e p="Installers" t="Include">

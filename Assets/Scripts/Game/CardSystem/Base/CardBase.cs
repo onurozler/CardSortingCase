@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Game.CardSystem.Model;
+using UnityEngine;
 
 namespace Game.CardSystem.Base
 {
@@ -8,9 +9,22 @@ namespace Game.CardSystem.Base
         public SpriteRenderer NumberIcon;
         public SpriteRenderer MainIcon;
 
-        public void Initialize()
+        public CardData CardData;
+
+        public void Initialize(CardData cardData)
         {
-            Debug.Log("Initialized");
+            CardData = cardData;
+            
+            Number.text = CardData.CardValue.View;
+            if (CardData.CardValue.Value == 10)
+            {
+                
+            }
+            else
+            {
+                
+            }
+            
         }
     }
 }

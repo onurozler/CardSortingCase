@@ -5,12 +5,12 @@ namespace Game.Managers
 {
     public class GameManager : MonoBehaviour
     {
-        private PoolManager _poolManager;
+        private CardPoolManager _cardPoolManager;
         
         [Inject]
-        private void OnInstaller(PoolManager poolManager)
+        private void OnInstaller(CardPoolManager cardPoolManager)
         {
-            _poolManager = poolManager;
+            _cardPoolManager = cardPoolManager;
         }
         
         private void Start()
