@@ -62,9 +62,15 @@ namespace Game.CardSystem.Managers
             }
         }
 
-        public void GetCardFromCurve(Vector2 Pos)
+        public CardBase GetCardFromCurve(Vector2 pos)
         {
+            var first = _availableValues.OrderBy(x => Vector2.Distance(x.Position, pos)).First();
+            if (Vector2.Distance(first.Position,pos) > 3f)
+            {
+                first = null;
+            }
             
+            return first?.CurrentCard;
         }
 
         public class CardCurveValue
