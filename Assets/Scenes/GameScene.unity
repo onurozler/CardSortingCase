@@ -433,6 +433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78bf54f6d773cac4cb9cc80eea70ce0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cardController: {fileID: 1230195317}
   _poolManager: {fileID: 802447442}
 --- !u!114 &266679513
 MonoBehaviour:

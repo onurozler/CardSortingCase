@@ -1,4 +1,4 @@
-﻿using Game.CardSystem.Managers;
+﻿using Game.CardSystem.Controllers;
 using Game.View;
 using UnityEngine;
 using Zenject;
@@ -8,13 +8,13 @@ namespace Game.Managers
     public class GameManager : MonoBehaviour
     {
         private PlayerView _playerView;
-        private CardPoolManager _cardPoolManager;
+        private CardController _cardController;
         
         [Inject]
-        private void OnInstaller(CardPoolManager cardPoolManager,PlayerView playerView)
+        private void OnInstaller(CardController cardController,PlayerView playerView)
         {
             _playerView = playerView;
-            _cardPoolManager = cardPoolManager;
+            _cardController = cardController;
         }
         
         private void Start()
@@ -25,6 +25,7 @@ namespace Game.Managers
         private void InitializeGame()
         {
             _playerView.Initialize();
+            _cardController.Initialize();
         }
     }
 }

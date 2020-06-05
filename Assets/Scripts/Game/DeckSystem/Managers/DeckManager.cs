@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Config;
 using Game.CardSystem.Model;
-using UnityEngine;
 using Utils;
 
 namespace Game.DeckSystem.Managers
