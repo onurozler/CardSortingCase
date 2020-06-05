@@ -1,5 +1,4 @@
 ﻿using Config;
-using Game.CardSystem.Base;
 using Game.CardSystem.Managers;
 using Game.DeckSystem.Managers;
 using Game.View;
@@ -13,17 +12,30 @@ namespace Game.CardSystem.Controllers
     public class CardController : MonoBehaviour
     {
         private BezierCurve3D _cardCurve;
-        
+
+        #region Managers
+
         private DeckManager _deckManager;
         private CardManager _cardManager;
         private CardCurveManager _cardCurveManager;
+
+        #endregion
+
+        #region Controllers
+
+        private CardInputController _cardInputController;
+
+        #endregion
+        
         
         [Inject]
-        private void OnInstaller(CardManager cardManager,DeckManager deckManager,CardCurveManager cardCurveManager)
+        private void OnInstaller(CardManager cardManager,DeckManager deckManager,CardCurveManager cardCurveManager,
+            CardInputController cardInputController)
         {
             _cardManager = cardManager;
             _deckManager = deckManager;
             _cardCurveManager = cardCurveManager;
+            _cardInputController = cardInputController;
             
             _cardCurve = GetComponentInChildren<BezierCurve3D>();
         }
@@ -33,6 +45,7 @@ namespace Game.CardSystem.Controllers
             MessageBroker.Default.Receive<PlayerButtonType>().Subscribe(ReceiveButtonAction);
 
             _cardCurveManager.InitializeCurveValues(_cardCurve);
+            _cardInputController.Initialize();
         }
         #region ButtonEvents
         

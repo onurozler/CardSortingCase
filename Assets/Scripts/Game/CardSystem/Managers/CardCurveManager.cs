@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Config;
 using DG.Tweening;
@@ -53,9 +52,19 @@ namespace Game.CardSystem.Managers
             if (cardCurve != null)
             {
                 cardCurve.CurrentCard = cardBase;
-                cardBase.transform.DOMove(cardCurve.Position, 0.5f);
-                cardBase.transform.DORotate(cardCurve.Rotation, 0.5f);
+
+              //  Observable.Timer(TimeSpan.FromSeconds(1f)).Subscribe(i =>
+               // {
+                    cardBase.transform.DOMove(cardCurve.Position, 0.5f);
+                    cardBase.transform.DORotate(cardCurve.Rotation, 0.5f);
+               // });
+
             }
+        }
+
+        public void GetCardFromCurve(Vector2 Pos)
+        {
+            
         }
 
         public class CardCurveValue

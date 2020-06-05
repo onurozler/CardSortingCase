@@ -25,9 +25,11 @@ namespace Installers
             Container.Bind<CardManager>().AsSingle().NonLazy();
             Container.Bind<DeckManager>().AsSingle().NonLazy();
             Container.Bind<CardCurveManager>().AsSingle().NonLazy();
+            Container.Bind<CardInputController>().AsSingle().NonLazy();
             
             Container.Bind<AssetManager>().FromComponentInHierarchy().AsSingle();
             Container.Bind<PlayerView>().FromComponentInHierarchy().AsSingle();
+            Container.Bind<Camera>().FromComponentInHierarchy().AsSingle();
 
             Container.BindMemoryPool<CardBase,CardPoolManager>().WithInitialSize(GameConfig.INITIAL_POOLITEM_COUNT).
                 FromComponentInNewPrefabResource(CARD_PREFAB_PATH).UnderTransform(_poolManager);
