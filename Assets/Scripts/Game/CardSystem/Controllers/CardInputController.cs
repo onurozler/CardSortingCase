@@ -12,6 +12,8 @@ namespace Game.CardSystem.Controllers
         private Camera _camera;
         private CardCurveManager _cardCurveManager;
         private CardBase _selectedCard;
+
+        private Tween _currentTween;
         
         [Inject]
         private void OnInstaller(CardCurveManager cardCurveManager,Camera camera)
@@ -24,9 +26,13 @@ namespace Game.CardSystem.Controllers
         public void Initialize()
         {
             Observable.EveryUpdate()
-                .Where(_ => Input.GetMouseButton(0))
+                .Where(_ => Input.GetMouseButtonDown(0))
                 .Select(_=> (Vector2)_camera.ScreenToWorldPoint(Input.mousePosition))
                 .Subscribe(SelectClosestCard);
+
+            Observable.EveryUpdate()
+                .Where(_ => !Input.GetMouseButton(0))
+                .Subscribe(_=> DeselectClosestCard());
         }
 
         private void SelectClosestCard(Vector2 mousePos)
@@ -39,8 +45,31 @@ namespace Game.CardSystem.Controllers
                     return;
                 
                 _selectedCard = selectedCard;
-                selectedCard.transform.DOMove(selectedCard.transform.position + 
-                                              selectedCard.transform.up * 2f,0.5f);
+
+                if (_currentTween != null && _currentTween.IsActive())
+                {
+                    _currentTween.Complete();
+                    _currentTween.Kill();
+                }
+
+                _currentTween = selectedCard.transform.DOMove(selectedCard.transform.position + 
+                                                              selectedCard.transform.up * 2f,0.5f);
+            }
+        }
+
+        private void DeselectClosestCard()
+        {
+            if (_selectedCard != null)
+            {
+                if (_currentTween != null && _currentTween.IsActive())
+                {
+                    _currentTween.Complete();
+                    _currentTween.Kill();
+                }
+                
+                _currentTween =_selectedCard.transform.DOMove(_selectedCard.transform.position + 
+                                                              _selectedCard.transform.up * -2f,0.5f);
+                _selectedCard = null;
             }
         }
     }
