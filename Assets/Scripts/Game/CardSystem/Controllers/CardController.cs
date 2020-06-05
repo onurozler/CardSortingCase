@@ -1,4 +1,6 @@
 ﻿using Config;
+using Game.CardSystem.Managers;
+using Game.DeckSystem.Managers;
 using Game.Managers;
 using Game.View;
 using NaughtyBezierCurves;
@@ -11,13 +13,18 @@ namespace Game.CardSystem.Controllers
     public class CardController : MonoBehaviour
     {
         private BezierCurve3D _bezierCurve;
-        private CardPoolManager _cardPoolManager;
+
+        private DeckManager _deckManager;
+        private CardManager _cardManager;
         
         [Inject]
-        private void OnInstaller(CardPoolManager cardPoolManager)
+        private void OnInstaller(CardManager cardManager,DeckManager deckManager)
         {
-            _cardPoolManager = cardPoolManager;
+            _cardManager = cardManager;
+            _deckManager = deckManager;
             
+            _bezierCurve = GetComponentInChildren<BezierCurve3D>();
+
             MessageBroker.Default.Receive<PlayerButtonType>().Subscribe(ReceiveButtonAction);
         }
 
@@ -29,15 +36,13 @@ namespace Game.CardSystem.Controllers
 
         private void WithdrawCards()
         {
-            _bezierCurve = GetComponentInChildren<BezierCurve3D>();
-
             float rotationZ = 55; //DegreeDiff
             float begin = 1f / GameConfig.PLAYER_DECK_COUNT / 2;
             float zPosition = 0;
             
-            for (int i = 0; i < 11; i++)
+            for (int i = 0; i < GameConfig.PLAYER_DECK_COUNT; i++)
             {
-                var card = _cardPoolManager.Spawn();
+                var card = _cardManager.AddCard(_deckManager.GetRandomCardData());
                 Vector3 newPos = _bezierCurve.GetPoint(begin);
                 newPos.z = zPosition;
                 card.transform.position = newPos;

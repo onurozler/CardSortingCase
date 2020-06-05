@@ -25,11 +25,11 @@ namespace Game.CardSystem.Managers
             _cardBases = new List<CardBase>(GameConfig.PLAYER_DECK_COUNT);
         }
 
-        public void AddCard(CardData cardData)
+        public CardBase AddCard(CardData cardData)
         {
             var card = _cardPoolManager.Spawn();
             card.Initialize(cardData);
-            
+            return card;
         }
 
         public void DeleteCard()

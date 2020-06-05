@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Config;
 using Game.CardSystem.Model;
+using UnityEngine;
 using Utils;
 
 namespace Game.DeckSystem.Managers
@@ -18,25 +19,24 @@ namespace Game.DeckSystem.Managers
 
         private void GenerateCardDatas()
         {
-            CardData cardData = new CardData();
-
             foreach (var cardType in GameConfig.CARD_TYPES)
             {
                 foreach (var cardVal in GameConfig.CARD_VALUES)
                 {
+                    CardData cardData = new CardData();
                     CardValue cardValue = new CardValue(cardVal.View,cardVal.Value);
                     cardData.CardType = cardType;
                     cardData.CardValue = cardValue;
-                    
                     _cardDatas.Add(cardData);
                 }
             }
         }
 
-        public void WithdrawCard()
+        public CardData GetRandomCardData()
         {
             var card = _cardDatas.GetRandomElementFromList();
-            
+            _cardDatas.Remove(card);
+            return card;
         }
     }
 }
