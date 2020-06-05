@@ -4,73 +4,94 @@ using Game.CardSystem.Base;
 using Game.CardSystem.Managers;
 using UniRx;
 using UnityEngine;
+using Utils;
 using Zenject;
 
 namespace Game.CardSystem.Controllers
 {
     public class CardInputController
     {
+        public event Action<CardBase, CardBase> OnCardsSwapped; 
+        
         private Camera _camera;
         private CardCurveManager _cardCurveManager;
-        private CardBase _selectedCard;
+        private CardCurveValue _selectedCurve;
 
-        private Tween _currentTween;
+        private Tween _selectTween;
         
         [Inject]
         private void OnInstaller(CardCurveManager cardCurveManager,Camera camera)
         {
             _camera = camera;
             _cardCurveManager = cardCurveManager;
-            _selectedCard = null;
+            _selectedCurve = null;
         }
 
         public void Initialize()
         {
-            Observable.EveryUpdate()
-                .Where(_ => Input.GetMouseButtonDown(0))
+            var observableUpdate = Observable.EveryUpdate();
+                        
+            observableUpdate
+                .Where(_ => Input.GetMouseButton(0))
                 .Select(_=> (Vector2)_camera.ScreenToWorldPoint(Input.mousePosition))
                 .Subscribe(SelectClosestCard);
 
-            Observable.EveryUpdate()
+            observableUpdate
                 .Where(_ => !Input.GetMouseButton(0))
                 .Subscribe(_=> DeselectClosestCard());
         }
 
         private void SelectClosestCard(Vector2 mousePos)
         {
-            var selectedCard = _cardCurveManager.GetCardFromCurve(mousePos);
+            var closeCurve = _cardCurveManager.GetCardFromCurve(mousePos);
+            if(closeCurve == null)
+                return;
             
-            if (selectedCard != null)
+            if (_selectedCurve == null)
             {
-                if (Equals(selectedCard, _selectedCard))
-                    return;
-                
-                _selectedCard = selectedCard;
+                //if (Equals(selectedCard, _selectedCard))
+                  //  return;
 
-                if (_currentTween != null && _currentTween.IsActive())
+                _selectedCurve = closeCurve;
+
+                if (_selectTween != null && _selectTween.IsActive())
                 {
-                    _currentTween.Complete();
-                    _currentTween.Kill();
+                    _selectTween.Complete();
+                    _selectTween.Kill();
                 }
-
-                _currentTween = selectedCard.transform.DOMove(selectedCard.transform.position + 
-                                                              selectedCard.transform.up * 2f,0.5f);
+                
+                _selectTween = _selectedCurve.CurrentCard.transform.DOMove(_selectedCurve.CurrentCard.transform.position + 
+                                                              _selectedCurve.CurrentCard.transform.up * 2f,0.5f);
+            }
+            
+            
+            if (!Equals(closeCurve,_selectedCurve))
+            {
+                _selectedCurve.CurrentCard.transform.DOMove(closeCurve.Position, 0.5f);
+                closeCurve.CurrentCard.transform.DOMove(_selectedCurve.Position, 0.5f);
+                
+                _selectedCurve.CurrentCard.transform.DORotate(closeCurve.Rotation, 0.5f);
+                closeCurve.CurrentCard.transform.DORotate(_selectedCurve.Rotation, 0.5f);
+                
+                OnCardsSwapped.SafeInvoke(_selectedCurve.CurrentCard,closeCurve.CurrentCard);
+                
+                _selectedCurve = null;
             }
         }
 
         private void DeselectClosestCard()
         {
-            if (_selectedCard != null)
+            if (_selectedCurve != null)
             {
-                if (_currentTween != null && _currentTween.IsActive())
+                if (_selectTween != null && _selectTween.IsActive())
                 {
-                    _currentTween.Complete();
-                    _currentTween.Kill();
+                    _selectTween.Complete();
+                    _selectTween.Kill();
                 }
                 
-                _currentTween =_selectedCard.transform.DOMove(_selectedCard.transform.position + 
-                                                              _selectedCard.transform.up * -2f,0.5f);
-                _selectedCard = null;
+                _selectTween =_selectedCurve.CurrentCard.transform.DOMove(_selectedCurve.CurrentCard.transform.position + 
+                                                              _selectedCurve.CurrentCard.transform.up * -2f,0.5f);
+                _selectedCurve = null;
             }
         }
     }

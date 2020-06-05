@@ -45,6 +45,9 @@ namespace Game.CardSystem.Controllers
             _cardCurveManager.InitializeCurveValues(_cardCurve);
             _cardInputController.Initialize();
         }
+        
+        
+        
         #region ButtonEvents
         
         private void ReceiveButtonAction(PlayerButtonType buttonType)
