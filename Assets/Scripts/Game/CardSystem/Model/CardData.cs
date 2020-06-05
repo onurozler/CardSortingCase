@@ -11,11 +11,13 @@ namespace Game.CardSystem.Model
     {
         public string View;
         public int Value;
+        public string Portrait;
 
-        public CardValue(string view, int value)
+        public CardValue(string view, int value, string portrait = "")
         {
             View = view;
             Value = value;
+            Portrait = portrait;
         }
     }
     

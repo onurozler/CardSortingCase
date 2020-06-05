@@ -1,4 +1,5 @@
-﻿using Game.View;
+﻿using Game.CardSystem.Managers;
+using Game.View;
 using UnityEngine;
 using Zenject;
 

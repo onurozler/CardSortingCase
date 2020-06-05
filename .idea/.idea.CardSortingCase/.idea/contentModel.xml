@@ -737,6 +737,7 @@
               </e>
               <e p="Managers" t="Include">
                 <e p="CardManager.cs" t="Include" />
+                <e p="CardPoolManager.cs" t="Include" />
               </e>
               <e p="Model" t="Include">
                 <e p="CardData.cs" t="Include" />
@@ -748,7 +749,7 @@
               </e>
             </e>
             <e p="Managers" t="Include">
-              <e p="CardPoolManager.cs" t="Include" />
+              <e p="AssetManager.cs" t="Include" />
               <e p="GameManager.cs" t="Include" />
             </e>
             <e p="View" t="Include">

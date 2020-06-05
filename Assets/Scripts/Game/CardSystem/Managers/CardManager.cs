@@ -2,7 +2,6 @@
 using Config;
 using Game.CardSystem.Base;
 using Game.CardSystem.Model;
-using Game.Managers;
 using Zenject;
 
 namespace Game.CardSystem.Managers

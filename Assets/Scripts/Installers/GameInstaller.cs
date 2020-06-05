@@ -21,6 +21,7 @@ namespace Installers
             Container.Bind<CardManager>().AsSingle().NonLazy();
             Container.Bind<DeckManager>().AsSingle().NonLazy();
 
+            Container.Bind<AssetManager>().FromComponentInHierarchy().AsSingle();
             Container.Bind<PlayerView>().FromComponentInHierarchy().AsSingle();
 
             Container.BindMemoryPool<CardBase,CardPoolManager>().WithInitialSize(GameConfig.INITIAL_POOLITEM_COUNT).

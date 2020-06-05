@@ -31,9 +31,9 @@ namespace Config
             new CardValue("8",8),
             new CardValue("9",9),
             new CardValue("10",10),
-            new CardValue("J",10),
-            new CardValue("Q",10),
-            new CardValue("K",10),
+            new CardValue("J",10, "Jack"),
+            new CardValue("Q",10,"Queen"),
+            new CardValue("K",10,"King"),
         };
     }
 }

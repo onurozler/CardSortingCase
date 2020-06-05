@@ -4,16 +4,16 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -1080677192667648205
-    second: PlayingCardsIcons_0
+    second: Spades_Icon
   - first:
       213: 5978206364571008866
-    second: PlayingCardsIcons_1
+    second: Diamonds_Icon
   - first:
       213: 6668937425345074146
-    second: PlayingCardsIcons_2
+    second: Hearts_Icon
   - first:
       213: -2693079047395607121
-    second: PlayingCardsIcons_3
+    second: Clubs_Icon
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -122,7 +122,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: PlayingCardsIcons_0
+      name: Spades_Icon
       rect:
         serializedVersion: 2
         x: 154
@@ -130,7 +130,7 @@ TextureImporter:
         width: 240
         height: 240
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -143,7 +143,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayingCardsIcons_1
+      name: Diamonds_Icon
       rect:
         serializedVersion: 2
         x: 403
@@ -151,7 +151,7 @@ TextureImporter:
         width: 240
         height: 240
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -164,7 +164,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayingCardsIcons_2
+      name: Hearts_Icon
       rect:
         serializedVersion: 2
         x: 155
@@ -172,7 +172,7 @@ TextureImporter:
         width: 240
         height: 240
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -185,15 +185,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayingCardsIcons_3
+      name: Clubs_Icon
       rect:
         serializedVersion: 2
-        x: 404
+        x: 406
         y: 141
         width: 240
         height: 240
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

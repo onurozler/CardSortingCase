@@ -16,11 +16,7 @@ namespace Game.CardSystem.Base
             CardData = cardData;
             
             Number.text = CardData.CardValue.View;
-            if (CardData.CardValue.Value == 10)
-            {
-                
-            }
-            else
+            if (CardData.CardValue.Portrait.Length > 0)
             {
                 
             }
