@@ -29,7 +29,7 @@ namespace Game.CardSystem.Managers
         public void InitializeCurveValues(BezierCurve3D cardCurve)
         {
             _cardManager.OnCardAdded += AddCardOnCurve;
-
+            _cardManager.OnCardDeleted += DeleteCardOnCurve;
             
             float rotationZ = 55; 
             float begin = 1f / GameConfig.PLAYER_DECK_COUNT / 2;
@@ -45,7 +45,7 @@ namespace Game.CardSystem.Managers
                 begin += 1f / GameConfig.PLAYER_DECK_COUNT ;
             }
         }
-        
+
         private void AddCardOnCurve(CardBase cardBase)
         {
             var cardCurve = _availableValues.FirstOrDefault(x => x.CurrentCard == null);
@@ -59,6 +59,15 @@ namespace Game.CardSystem.Managers
                     cardBase.transform.DORotate(cardCurve.Rotation, 0.5f);
                // });
 
+            }
+        }
+        
+        private void DeleteCardOnCurve(CardBase cardBase)
+        {
+            var cardCurve = _availableValues.FirstOrDefault(x => x.CurrentCard == cardBase);
+            if (cardCurve != null)
+            {
+                cardCurve.CurrentCard = null;
             }
         }
 

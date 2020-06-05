@@ -15,7 +15,6 @@ namespace Game.CardSystem.Controllers
 
         #region Managers
 
-        private DeckManager _deckManager;
         private CardManager _cardManager;
         private CardCurveManager _cardCurveManager;
 
@@ -29,11 +28,10 @@ namespace Game.CardSystem.Controllers
         
         
         [Inject]
-        private void OnInstaller(CardManager cardManager,DeckManager deckManager,CardCurveManager cardCurveManager,
+        private void OnInstaller(CardManager cardManager,CardCurveManager cardCurveManager,
             CardInputController cardInputController)
         {
             _cardManager = cardManager;
-            _deckManager = deckManager;
             _cardCurveManager = cardCurveManager;
             _cardInputController = cardInputController;
             
@@ -57,9 +55,11 @@ namespace Game.CardSystem.Controllers
 
         private void WithdrawCards()
         {
+            _cardManager.ResetCards();
+            
             for (int i = 0; i < GameConfig.PLAYER_DECK_COUNT; i++)
             {
-                _cardManager.AddCard(_deckManager.GetRandomCardData());
+                _cardManager.AddCard();
             }
         }
         

@@ -13,20 +13,19 @@ namespace Game.CardSystem.Managers
     {
         #region Events
         public event Action<CardBase> OnCardAdded;
+        public event Action<CardBase> OnCardDeleted;
 
         #endregion
         
         private List<CardBase> _cardBases;
 
         private CardPoolManager _cardPoolManager;
-        private AssetManager _assetManager;
         
 
         [Inject]
-        private void OnInstaller(CardPoolManager cardPoolManager, AssetManager assetManager)
+        private void OnInstaller(CardPoolManager cardPoolManager)
         {
             _cardPoolManager = cardPoolManager;
-            _assetManager = assetManager;
         }
         
         public CardManager()
@@ -34,20 +33,22 @@ namespace Game.CardSystem.Managers
             _cardBases = new List<CardBase>(GameConfig.PLAYER_DECK_COUNT);
         }
 
-        public void AddCard(CardData cardData)
+        public void AddCard()
         {
             var card = _cardPoolManager.Spawn();
-            card.Initialize(cardData,_assetManager.GetCardIcon(cardData.CardType),
-                _assetManager.GetPortraitIcon(cardData.CardValue.Portrait));
-            
             OnCardAdded.SafeInvoke(card);
-            
             _cardBases.Add(card);
         }
 
-        public void DeleteCard()
+        public void ResetCards()
         {
+            foreach (var cardBase in _cardBases)
+            {
+                _cardPoolManager.Despawn(cardBase);
+                OnCardDeleted.SafeInvoke(cardBase);
+            }
             
+            _cardBases.Clear();
         }
     }
 }

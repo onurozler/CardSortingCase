@@ -22,8 +22,8 @@ namespace Installers
 
         public override void InstallBindings()
         {
-            Container.Bind<CardManager>().AsSingle().NonLazy();
             Container.Bind<DeckManager>().AsSingle().NonLazy();
+            Container.Bind<CardManager>().AsSingle().NonLazy();
             Container.Bind<CardCurveManager>().AsSingle().NonLazy();
             Container.Bind<CardInputController>().AsSingle().NonLazy();
             
