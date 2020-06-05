@@ -1,12 +1,31 @@
-﻿using UnityEngine;
+﻿using UniRx;
+using UnityEngine;
 
 namespace Game.View
 {
     public class PlayerView : MonoBehaviour
     {
-        public void Test()
+        public ButtonBase WithdrawCards;
+
+        public void Initialize()
         {
-            Debug.Log("test");
+            WithdrawCards.OnClickEvent += PublishWithdrawOnClick;
         }
+
+        private void PublishWithdrawOnClick()
+        {
+            MessageBroker.Default.Publish(PlayerButtonType.WITDHDRAW);
+        }
+
+        private void OnDestroy()
+        {
+            WithdrawCards.OnClickEvent -= PublishWithdrawOnClick;
+        }
+    }
+
+    public enum PlayerButtonType
+    {
+        WITDHDRAW,
+        SMARTSORT
     }
 }

@@ -2,6 +2,7 @@
 using Game.Managers;
 using Game.View;
 using NaughtyBezierCurves;
+using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -11,20 +12,23 @@ namespace Game.CardSystem.Controllers
     {
         private BezierCurve3D _bezierCurve;
         private CardPoolManager _cardPoolManager;
-
-        private PlayerView _playerView;
         
         [Inject]
-        private void OnInstaller(CardPoolManager cardPoolManager, PlayerView playerView)
+        private void OnInstaller(CardPoolManager cardPoolManager)
         {
             _cardPoolManager = cardPoolManager;
-            _playerView = playerView;
-        }
-        
-        private void Awake()
-        {
-            _playerView.Test();
             
+            MessageBroker.Default.Receive<PlayerButtonType>().Subscribe(ReceiveButtonAction);
+        }
+
+        private void ReceiveButtonAction(PlayerButtonType buttonType)
+        {
+            if (buttonType == PlayerButtonType.WITDHDRAW)
+                WithdrawCards();
+        }
+
+        private void WithdrawCards()
+        {
             _bezierCurve = GetComponentInChildren<BezierCurve3D>();
 
             float rotationZ = 55; //DegreeDiff
