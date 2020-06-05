@@ -1,12 +1,16 @@
 ﻿
+using System;
+
 namespace Game.CardSystem.Model
 {
+    [Serializable]
     public class CardData
     {
         public CardType CardType;
         public CardValue CardValue;
     }
-
+    
+    [Serializable]
     public class CardValue
     {
         public string View;
@@ -23,9 +27,10 @@ namespace Game.CardSystem.Model
     
     public enum CardType
     {
-        Clubs,
-        Diamonds,
-        Hearts,
-        Spades
+        Clubs = 1,
+        Diamonds = 2,
+        Spades = 3,
+        Hearts = 4
+
     }
 }

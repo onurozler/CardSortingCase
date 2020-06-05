@@ -11,16 +11,14 @@ namespace Game.CardSystem.Base
 
         public CardData CardData;
 
-        public void Initialize(CardData cardData)
+        public void Initialize(CardData cardData, Sprite numberIcon, Sprite mainIcon)
         {
             CardData = cardData;
             
             Number.text = CardData.CardValue.View;
-            if (CardData.CardValue.Portrait.Length > 0)
-            {
-                
-            }
-            
+            Number.color = (int) CardData.CardType % 2 == 0 ? Color.red : Color.black;
+            NumberIcon.sprite = numberIcon;
+            MainIcon.sprite = mainIcon != null ? mainIcon : numberIcon;
         }
     }
 }

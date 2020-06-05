@@ -16,12 +16,12 @@ namespace Game.Managers
 
         public Sprite GetCardIcon(CardType cardType)
         {
-            return _cardIcons.FirstOrDefault(x=> x.name == cardType+SUFFIX);
+            return _cardIcons.FirstOrDefault(x=> x.name.Equals(cardType+SUFFIX));
         }
 
         public Sprite GetPortraitIcon(string portName)
         {
-            return _cardIcons.FirstOrDefault(x => x.name == portName);
+            return _portraitIcons.FirstOrDefault(x => x.name.Equals(portName+SUFFIX));
         }
     }
 }

@@ -2,6 +2,7 @@
 using Config;
 using Game.CardSystem.Base;
 using Game.CardSystem.Model;
+using Game.Managers;
 using Zenject;
 
 namespace Game.CardSystem.Managers
@@ -11,12 +12,14 @@ namespace Game.CardSystem.Managers
         private List<CardBase> _cardBases;
 
         private CardPoolManager _cardPoolManager;
+        private AssetManager _assetManager;
         
 
         [Inject]
-        private void OnInstaller(CardPoolManager cardPoolManager)
+        private void OnInstaller(CardPoolManager cardPoolManager, AssetManager assetManager)
         {
             _cardPoolManager = cardPoolManager;
+            _assetManager = assetManager;
         }
         
         public CardManager()
@@ -27,7 +30,8 @@ namespace Game.CardSystem.Managers
         public CardBase AddCard(CardData cardData)
         {
             var card = _cardPoolManager.Spawn();
-            card.Initialize(cardData);
+            card.Initialize(cardData,_assetManager.GetCardIcon(cardData.CardType),
+                _assetManager.GetPortraitIcon(cardData.CardValue.Portrait));
             return card;
         }
 

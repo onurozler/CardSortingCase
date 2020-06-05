@@ -24,7 +24,7 @@ namespace Game.DeckSystem.Managers
                 foreach (var cardVal in GameConfig.CARD_VALUES)
                 {
                     CardData cardData = new CardData();
-                    CardValue cardValue = new CardValue(cardVal.View,cardVal.Value);
+                    CardValue cardValue = new CardValue(cardVal.View,cardVal.Value,cardVal.Portrait);
                     cardData.CardType = cardType;
                     cardData.CardValue = cardValue;
                     _cardDatas.Add(cardData);
