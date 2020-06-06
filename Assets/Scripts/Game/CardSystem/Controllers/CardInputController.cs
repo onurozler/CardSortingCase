@@ -4,7 +4,6 @@ using Game.CardSystem.Base;
 using Game.CardSystem.Managers;
 using UniRx;
 using UnityEngine;
-using Utils;
 using Zenject;
 
 namespace Game.CardSystem.Controllers
@@ -49,19 +48,14 @@ namespace Game.CardSystem.Controllers
             
             if (_selectedCurve == null)
             {
-                //if (Equals(selectedCard, _selectedCard))
-                  //  return;
-
                 _selectedCurve = closeCurve;
-
                 if (_selectTween != null && _selectTween.IsActive())
                 {
                     _selectTween.Complete();
                     _selectTween.Kill();
                 }
-                
                 _selectTween = _selectedCurve.CurrentCard.transform.DOMove(_selectedCurve.CurrentCard.transform.position + 
-                                                              _selectedCurve.CurrentCard.transform.up * 2f,0.5f);
+                                                                           _selectedCurve.CurrentCard.transform.up * 2f,0.5f);
             }
             
             
@@ -73,7 +67,7 @@ namespace Game.CardSystem.Controllers
                 _selectedCurve.CurrentCard.transform.DORotate(closeCurve.Rotation, 0.5f);
                 closeCurve.CurrentCard.transform.DORotate(_selectedCurve.Rotation, 0.5f);
                 
-                OnCardsSwapped.SafeInvoke(_selectedCurve.CurrentCard,closeCurve.CurrentCard);
+                //OnCardsSwapped.SafeInvoke(_selectedCurve.CurrentCard,closeCurve.CurrentCard);
                 
                 _selectedCurve = null;
             }

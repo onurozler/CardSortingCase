@@ -4,6 +4,7 @@ using Game.CardSystem.Controllers;
 using Game.CardSystem.Managers;
 using Game.DeckSystem.Managers;
 using Game.Managers;
+using Game.SortingSystem;
 using Game.View;
 using UnityEngine;
 using Zenject;
@@ -24,6 +25,7 @@ namespace Installers
         {
             Container.Bind<DeckManager>().AsSingle().NonLazy();
             Container.Bind<CardManager>().AsSingle().NonLazy();
+            Container.Bind<SortingManager>().AsSingle().NonLazy();
             Container.Bind<CardCurveManager>().AsSingle().NonLazy();
             Container.Bind<CardInputController>().AsSingle().NonLazy();
             

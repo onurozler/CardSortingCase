@@ -1,6 +1,8 @@
-﻿using Config;
+﻿using System;
+using Config;
 using Game.CardSystem.Managers;
 using Game.DeckSystem.Managers;
+using Game.SortingSystem;
 using Game.View;
 using NaughtyBezierCurves;
 using UniRx;
@@ -17,6 +19,7 @@ namespace Game.CardSystem.Controllers
 
         private CardManager _cardManager;
         private CardCurveManager _cardCurveManager;
+        private SortingManager _sortingManager;
 
         #endregion
 
@@ -28,12 +31,13 @@ namespace Game.CardSystem.Controllers
         
         
         [Inject]
-        private void OnInstaller(CardManager cardManager,CardCurveManager cardCurveManager,
+        private void OnInstaller(CardManager cardManager,CardCurveManager cardCurveManager,SortingManager sortingManager,
             CardInputController cardInputController)
         {
             _cardManager = cardManager;
             _cardCurveManager = cardCurveManager;
             _cardInputController = cardInputController;
+            _sortingManager = sortingManager;
             
             _cardCurve = GetComponentInChildren<BezierCurve3D>();
         }
@@ -52,8 +56,19 @@ namespace Game.CardSystem.Controllers
         
         private void ReceiveButtonAction(PlayerButtonType buttonType)
         {
-            if (buttonType == PlayerButtonType.WITDHDRAW)
-                WithdrawCards();
+            switch (buttonType)
+            {
+                case PlayerButtonType.WITDHDRAW:
+                    WithdrawCards();
+                    break;
+                case PlayerButtonType.CONSECUTIVE_SORT:
+                    _sortingManager.ConsecutiveSort();
+                    break;
+                case PlayerButtonType.SAME_NUMBER_SORT:
+                    break;
+                case PlayerButtonType.SMARTSORT:
+                    break;
+            }
         }
 
         private void WithdrawCards()
@@ -65,6 +80,7 @@ namespace Game.CardSystem.Controllers
                 _cardManager.AddCard();
             }
         }
+        
         
         #endregion
 

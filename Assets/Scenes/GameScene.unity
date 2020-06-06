@@ -211,7 +211,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 114e027bb2109094d9b470d338eb8647, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WithdrawCards: {fileID: 1246767779}
+  _withdrawCards: {fileID: 1246767779}
+  _777Sort: {fileID: 1738473197}
+  _123Sort: {fileID: 2111667657}
+  _smartSort: {fileID: 1581481367}
 --- !u!1 &192789193
 GameObject:
   m_ObjectHideFlags: 0
