@@ -4,6 +4,7 @@ using Game.CardSystem.Base;
 using Game.CardSystem.Managers;
 using UniRx;
 using UnityEngine;
+using Utils;
 using Zenject;
 
 namespace Game.CardSystem.Controllers
@@ -17,6 +18,7 @@ namespace Game.CardSystem.Controllers
         private CardCurveValue _selectedCurve;
 
         private Tween _selectTween;
+        private Sequence _swapSequence;
         
         [Inject]
         private void OnInstaller(CardCurveManager cardCurveManager,Camera camera)
@@ -24,6 +26,7 @@ namespace Game.CardSystem.Controllers
             _camera = camera;
             _cardCurveManager = cardCurveManager;
             _selectedCurve = null;
+            _swapSequence = DOTween.Sequence();
         }
 
         public void Initialize()
@@ -37,6 +40,7 @@ namespace Game.CardSystem.Controllers
 
             observableUpdate
                 .Where(_ => !Input.GetMouseButton(0))
+                .Where( _=> _selectedCurve != null && !_swapSequence.IsActive())
                 .Subscribe(_=> DeselectClosestCard());
         }
 
@@ -54,6 +58,7 @@ namespace Game.CardSystem.Controllers
                     _selectTween.Complete();
                     _selectTween.Kill();
                 }
+                
                 _selectTween = _selectedCurve.CurrentCard.transform.DOMove(_selectedCurve.CurrentCard.transform.position + 
                                                                            _selectedCurve.CurrentCard.transform.up * 2f,0.5f);
             }
@@ -61,32 +66,37 @@ namespace Game.CardSystem.Controllers
             
             if (!Equals(closeCurve,_selectedCurve))
             {
-                _selectedCurve.CurrentCard.transform.DOMove(closeCurve.Position, 0.5f);
-                closeCurve.CurrentCard.transform.DOMove(_selectedCurve.Position, 0.5f);
+                if(_swapSequence.IsActive())
+                    return;
                 
-                _selectedCurve.CurrentCard.transform.DORotate(closeCurve.Rotation, 0.5f);
-                closeCurve.CurrentCard.transform.DORotate(_selectedCurve.Rotation, 0.5f);
-                
-                //OnCardsSwapped.SafeInvoke(_selectedCurve.CurrentCard,closeCurve.CurrentCard);
-                
-                _selectedCurve = null;
+                _swapSequence.Kill();
+                _swapSequence = DOTween.Sequence()
+                    .Insert(0, _selectedCurve.CurrentCard.transform.DOMove(closeCurve.Position, 0.5f))
+                    .Insert(0, _selectedCurve.CurrentCard.transform.DORotate(closeCurve.Rotation, 0.5f))
+                    .Insert(0, closeCurve.CurrentCard.transform.DOMove(_selectedCurve.Position, 0.5f))
+                    .Insert(0, closeCurve.CurrentCard.transform.DORotate(_selectedCurve.Rotation, 0.5f))
+                    .OnComplete(() =>
+                    {
+                        _selectedCurve.CurrentCard.transform.DOMove(_selectedCurve.CurrentCard.transform.position + 
+                                                                    _selectedCurve.CurrentCard.transform.up * 2f,0.5f);
+                    });
+
+                OnCardsSwapped.SafeInvoke(_selectedCurve.CurrentCard,closeCurve.CurrentCard);
+                _selectedCurve = closeCurve;
             }
         }
 
         private void DeselectClosestCard()
         {
-            if (_selectedCurve != null)
+            if (_selectTween != null && _selectTween.IsActive())
             {
-                if (_selectTween != null && _selectTween.IsActive())
-                {
-                    _selectTween.Complete();
-                    _selectTween.Kill();
-                }
-                
-                _selectTween =_selectedCurve.CurrentCard.transform.DOMove(_selectedCurve.CurrentCard.transform.position + 
-                                                              _selectedCurve.CurrentCard.transform.up * -2f,0.5f);
-                _selectedCurve = null;
+                _selectTween.Complete();
+                _selectTween.Kill();
             }
+            
+            _selectTween =_selectedCurve.CurrentCard.transform.DOMove(_selectedCurve.Position,0.5f);
+            _selectedCurve = null;
+            
         }
     }
 }
