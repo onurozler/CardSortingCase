@@ -58,32 +58,29 @@ namespace Game.CardSystem.Controllers
                     _selectTween.Complete();
                     _selectTween.Kill();
                 }
-                
                 _selectTween = _selectedCurve.CurrentCard.transform.DOMove(_selectedCurve.CurrentCard.transform.position + 
                                                                            _selectedCurve.CurrentCard.transform.up * 2f,0.5f);
             }
-            
-            
             if (!Equals(closeCurve,_selectedCurve))
             {
                 if(_swapSequence.IsActive())
                     return;
-                
-                _swapSequence.Kill();
-                _swapSequence = DOTween.Sequence()
-                    .Insert(0, _selectedCurve.CurrentCard.transform.DOMove(closeCurve.Position, 0.5f))
-                    .Insert(0, _selectedCurve.CurrentCard.transform.DORotate(closeCurve.Rotation, 0.5f))
-                    .Insert(0, closeCurve.CurrentCard.transform.DOMove(_selectedCurve.Position, 0.5f))
-                    .Insert(0, closeCurve.CurrentCard.transform.DORotate(_selectedCurve.Rotation, 0.5f))
-                    .OnComplete(() =>
-                    {
-                        _selectedCurve.CurrentCard.transform.DOMove(_selectedCurve.CurrentCard.transform.position + 
-                                                                    _selectedCurve.CurrentCard.transform.up * 2f,0.5f);
-                    });
 
-                OnCardsSwapped.SafeInvoke(_selectedCurve.CurrentCard,closeCurve.CurrentCard);
-                _selectedCurve = closeCurve;
+                SwapCards(closeCurve);
             }
+        }
+
+        private void SwapCards(CardCurveValue closeCurve)
+        {
+            _swapSequence.Kill();
+            _swapSequence = DOTween.Sequence()
+                .Insert(0, _selectedCurve.CurrentCard.transform.DOMove(closeCurve.Position, 0.5f))
+                .Insert(0, _selectedCurve.CurrentCard.transform.DORotate(closeCurve.Rotation, 0.5f))
+                .Insert(0, closeCurve.CurrentCard.transform.DOMove(_selectedCurve.Position, 0.5f))
+                .Insert(0, closeCurve.CurrentCard.transform.DORotate(_selectedCurve.Rotation, 0.5f));
+
+            OnCardsSwapped.SafeInvoke(_selectedCurve.CurrentCard,closeCurve.CurrentCard);
+            _selectedCurve = closeCurve;
         }
 
         private void DeselectClosestCard()

@@ -9,6 +9,8 @@ namespace Config
         public static int INITIAL_POOLITEM_COUNT = 11;
         public static int PLAYER_DECK_COUNT = 11;
         public static int DECK_COUNT = 52;
+
+        public static float CARD_SELECTION_THRESHOLD = 3f;
         
         
         public static List<CardType> CARD_TYPES = new List<CardType>

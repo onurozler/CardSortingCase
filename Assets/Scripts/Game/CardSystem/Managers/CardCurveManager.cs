@@ -59,7 +59,7 @@ namespace Game.CardSystem.Managers
             {
                 cardCurve.CurrentCard = cardBase;
 
-              //  Observable.Timer(TimeSpan.FromSeconds(1f)).Subscribe(i =>
+                //  Observable.Timer(TimeSpan.FromSeconds(1f)).Subscribe(i =>
                // {
                     cardBase.transform.DOMove(cardCurve.Position, 0.5f);
                     cardBase.transform.DORotate(cardCurve.Rotation, 0.5f);
@@ -86,25 +86,18 @@ namespace Game.CardSystem.Managers
             {
                 curve1.CurrentCard = card2;
                 curve2.CurrentCard = card1;
-                
-                /*
-                card1.transform.DOMove(curve2.Position, 0.5f);
-                card2.transform.DOMove(curve1.Position, 0.5f);
-                
-                card1.transform.DORotate(curve2.Rotation, 0.5f);
-                card2.transform.DORotate(curve1.Rotation, 0.5f);*/
             }
         }
 
         public CardCurveValue GetCardFromCurve(Vector2 pos)
         {
             var first = _availableValues.OrderBy(x => Vector2.Distance(x.Position, pos)).First();
-            if (Vector2.Distance(first.Position,pos) > 3f)
-            {
-                first = null;
-            }
-            
-            return first;
+            return Vector2.Distance(first.Position,pos) < GameConfig.CARD_SELECTION_THRESHOLD ? first : null;
+        }
+
+        public List<CardCurveValue> GetCardCurveValues()
+        {
+            return _availableValues;
         }
     }
     

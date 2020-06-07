@@ -62,7 +62,7 @@ namespace Game.CardSystem.Controllers
                     WithdrawCards();
                     break;
                 case PlayerButtonType.CONSECUTIVE_SORT:
-                    _sortingManager.ConsecutiveSort();
+                    SortConsecutive();
                     break;
                 case PlayerButtonType.SAME_NUMBER_SORT:
                     break;
@@ -79,6 +79,11 @@ namespace Game.CardSystem.Controllers
             {
                 _cardManager.AddCard();
             }
+        }
+
+        private void SortConsecutive()
+        {
+            _sortingManager.ConsecutiveSort();
         }
         
         
