@@ -15,19 +15,23 @@ namespace Game.DeckSystem.Managers
 
         private CardManager _cardManager;
         private AssetManager _assetManager;
+
+        private static int _testCounter;
         
         [Inject]
         private void OnInstaller(CardManager cardManager,AssetManager assetManager)
         {
             _cardManager = cardManager;
             _assetManager = assetManager;
+            _testCounter = 0;
             
             _cardManager.OnCardAdded += WitdrawCardFromDeck;
+            _cardManager.OnCardAddedTest += WithdrawTestCards;
             _cardManager.OnCardDeleted += PutCardToDeck;
             
             GenerateCardDatas();
         }
-        
+
         public DeckManager()
         {
             _cardDatas = new List<CardData>(GameConfig.DECK_COUNT);
@@ -47,6 +51,13 @@ namespace Game.DeckSystem.Managers
                 }
             }
         }
+        
+        private void WithdrawTestCards(CardBase cardBase)
+        {
+            var cardData = GameConfig.TEST_CARD_DATAS[_testCounter++];
+            cardBase.Initialize(cardData, _assetManager.GetCardIcon(cardData.CardType),
+                _assetManager.GetPortraitIcon(cardData.CardValue.Portrait));
+        }
 
         private void WitdrawCardFromDeck(CardBase cardBase)
         {
@@ -59,6 +70,7 @@ namespace Game.DeckSystem.Managers
         private void PutCardToDeck(CardBase cardBase)
         {
             _cardDatas.Add(cardBase.CardData);
+            _testCounter = 0;
         }
         
     }

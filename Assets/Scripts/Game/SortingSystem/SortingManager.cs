@@ -2,6 +2,7 @@
 using Game.CardSystem.Managers;
 using System.Linq;
 using Config;
+using UnityEngine;
 using Utils;
 using Zenject;
 
@@ -78,9 +79,12 @@ namespace Game.SortingSystem
 
         #region 777Sort/SameNumberSort
 
-        public List<CardCurveValue> SameNumberSort(out List<CardCurveValue> nonSameValue)
+        public List<CardCurveValue> SameNumberSort()
         {
-            nonSameValue = _cardCurveManager.GetCardCurveValues().Clone();
+            if (_cardCurveManager.HasNull())
+                return null;
+            
+            var nonSameValue = _cardCurveManager.GetCardCurveValues().Clone();
             var cardValues = nonSameValue.Select(x => x.CurrentCard.CardData.CardValue.View).Distinct().ToList();
             List<List<CardCurveValue>> sameNumbers = new List<List<CardCurveValue>>();
             foreach (var viewPattern in cardValues)

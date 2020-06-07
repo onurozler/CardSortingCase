@@ -76,10 +76,11 @@ namespace Game.CardSystem.Controllers
         {
             if (parameter.Item2.Equals(GameConfig.TEST_DRAW_COMMAND))
             {
+                WithdrawCards(true);
             }
         }
 
-        private void WithdrawCards()
+        private void WithdrawCards(bool testDeck = false)
         {
             _cardManager.ResetCards();
             _withdrawDisposable?.Dispose();
@@ -90,7 +91,12 @@ namespace Game.CardSystem.Controllers
                 if (counter > GameConfig.PLAYER_DECK_COUNT)
                     _withdrawDisposable.Dispose();
                 else
-                    _cardManager.AddCard();
+                {
+                    if(!testDeck)
+                        _cardManager.AddCard();
+                    else
+                        _cardManager.AddTestCard();
+                }
             });
         }
 
@@ -101,12 +107,12 @@ namespace Game.CardSystem.Controllers
         
         private void SortSameNumbers()
         {
-            List<CardCurveValue> nonSameValues;
-            var sameNumbers = _sortingManager.SameNumberSort(out nonSameValues);
-
-            int index = 1;
-            sameNumbers.ForEach(x=> _cardCurveManager.SwapCards(x.Index, index++));
-            //nonSameValues.ForEach(x=> _cardCurveManager.UpdateCardIndex(x.Index, index++));
+            var sameNumbers = _sortingManager.SameNumberSort();
+            if (sameNumbers != null)
+            {
+                int index = 1;
+                sameNumbers.ForEach(x => _cardCurveManager.SwapCards(x.Index, index++));
+            }
         }
         
         #endregion

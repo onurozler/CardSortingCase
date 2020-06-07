@@ -11,6 +11,7 @@ namespace Game.CardSystem.Managers
     {
         #region Events
         public event Action<CardBase> OnCardAdded;
+        public event Action<CardBase> OnCardAddedTest;
         public event Action<CardBase> OnCardDeleted;
 
         #endregion
@@ -35,6 +36,13 @@ namespace Game.CardSystem.Managers
         {
             var card = _cardPoolManager.Spawn();
             OnCardAdded.SafeInvoke(card);
+            _cardBases.Add(card);
+        }
+
+        public void AddTestCard()
+        {
+            var card = _cardPoolManager.Spawn();
+            OnCardAddedTest.SafeInvoke(card);
             _cardBases.Add(card);
         }
 

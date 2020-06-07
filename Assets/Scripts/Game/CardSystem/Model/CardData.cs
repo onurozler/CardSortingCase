@@ -3,7 +3,7 @@
 namespace Game.CardSystem.Model
 {
     [Serializable]
-    public class CardData : IComparable<CardData>
+    public class CardData
     {
         public CardType CardType;
         public CardValue CardValue;
@@ -15,15 +15,6 @@ namespace Game.CardSystem.Model
         {
             CardType = cardType;
             CardValue = cardCurveValue;
-        }
-
-        public int CompareTo(CardData other)
-        {
-            if (this.CardType == other.CardType && this.CardValue.Value == other.CardValue.Value &&
-                this.CardValue.View == other.CardValue.View)
-                return 1;
-
-            return 0;
         }
     }
     

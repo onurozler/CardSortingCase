@@ -24,6 +24,7 @@ namespace Game.CardSystem.Managers
             _cardInputController = cardInputController;
             
             _cardManager.OnCardAdded += AddCardOnCurve;
+            _cardManager.OnCardAddedTest += AddCardOnCurve;
             _cardManager.OnCardDeleted += DeleteCardOnCurve;
 
             _cardInputController.OnCardsSwapped += SwapCards;
@@ -106,6 +107,11 @@ namespace Game.CardSystem.Managers
         {
             var first = _availableValues.OrderBy(x => Vector2.Distance(x.Position, pos)).First();
             return Vector2.Distance(first.Position,pos) < GameConfig.CARD_SELECTION_THRESHOLD ? first : null;
+        }
+
+        public bool HasNull()
+        {
+            return _availableValues.Count(x => x.CurrentCard == null) > 0;
         }
 
         public List<CardCurveValue> GetCardCurveValues()
