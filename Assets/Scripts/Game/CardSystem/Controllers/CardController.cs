@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Config;
 using Game.CardSystem.Managers;
-using Game.DeckSystem.Managers;
 using Game.SortingSystem;
 using Game.View;
 using NaughtyBezierCurves;
@@ -14,6 +14,7 @@ namespace Game.CardSystem.Controllers
     public class CardController : MonoBehaviour
     {
         private BezierCurve3D _cardCurve;
+        private IDisposable _withdrawDisposable;
 
         #region Managers
 
@@ -45,12 +46,11 @@ namespace Game.CardSystem.Controllers
         public void Initialize()
         {
             MessageBroker.Default.Receive<PlayerButtonType>().Subscribe(ReceiveButtonAction);
-
+            MessageBroker.Default.Receive<(PlayerButtonType, string)>().Subscribe(ReceiveButtonActionWithParameters);
+            
             _cardCurveManager.InitializeCurveValues(_cardCurve);
             _cardInputController.Initialize();
         }
-        
-        
         
         #region ButtonEvents
         
@@ -65,20 +65,33 @@ namespace Game.CardSystem.Controllers
                     SortConsecutive();
                     break;
                 case PlayerButtonType.SAME_NUMBER_SORT:
+                    SortSameNumbers();
                     break;
                 case PlayerButtonType.SMARTSORT:
                     break;
             }
         }
 
+        private void ReceiveButtonActionWithParameters((PlayerButtonType,string) parameter)
+        {
+            if (parameter.Item2.Equals(GameConfig.TEST_DRAW_COMMAND))
+            {
+            }
+        }
+
         private void WithdrawCards()
         {
             _cardManager.ResetCards();
-            
-            for (int i = 0; i < GameConfig.PLAYER_DECK_COUNT; i++)
+            _withdrawDisposable?.Dispose();
+            int counter = 0;
+            _withdrawDisposable = Observable.Interval(TimeSpan.FromSeconds(GameConfig.WITHDRAW_SECONDS)).Subscribe(_ =>
             {
-                _cardManager.AddCard();
-            }
+                counter++;
+                if (counter > GameConfig.PLAYER_DECK_COUNT)
+                    _withdrawDisposable.Dispose();
+                else
+                    _cardManager.AddCard();
+            });
         }
 
         private void SortConsecutive()
@@ -86,6 +99,15 @@ namespace Game.CardSystem.Controllers
             _sortingManager.ConsecutiveSort();
         }
         
+        private void SortSameNumbers()
+        {
+            List<CardCurveValue> nonSameValues;
+            var sameNumbers = _sortingManager.SameNumberSort(out nonSameValues);
+
+            int index = 1;
+            sameNumbers.ForEach(x=> _cardCurveManager.SwapCards(x.Index, index++));
+            //nonSameValues.ForEach(x=> _cardCurveManager.UpdateCardIndex(x.Index, index++));
+        }
         
         #endregion
 

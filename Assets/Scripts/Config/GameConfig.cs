@@ -11,8 +11,10 @@ namespace Config
         public static int DECK_COUNT = 52;
 
         public static float CARD_SELECTION_THRESHOLD = 3f;
-        
-        
+        public static float WITHDRAW_SECONDS = 0.2f;
+
+        #region Card Options
+
         public static List<CardType> CARD_TYPES = new List<CardType>
         {
             CardType.Clubs,
@@ -37,5 +39,32 @@ namespace Config
             new CardValue("Q",10,"Queen"),
             new CardValue("K",10,"King"),
         };
+
+        #endregion
+
+        #region Test
+
+        public static string TEST_DRAW_COMMAND = "TestDraw";
+
+        // Example Card Datas from Document
+        public static List<CardData> TEST_CARD_DATAS = new List<CardData>()
+        {
+            new CardData(CardType.Hearts,CARD_VALUES[0]),
+            new CardData(CardType.Spades,CARD_VALUES[1]),
+            new CardData(CardType.Diamonds,CARD_VALUES[4]),
+            new CardData(CardType.Hearts,CARD_VALUES[3]),
+            new CardData(CardType.Spades,CARD_VALUES[0]),
+            new CardData(CardType.Diamonds,CARD_VALUES[2]),
+            new CardData(CardType.Clubs,CARD_VALUES[3]),
+            new CardData(CardType.Spades,CARD_VALUES[3]),
+            new CardData(CardType.Diamonds,CARD_VALUES[0]),
+            new CardData(CardType.Spades,CARD_VALUES[2]),
+            new CardData(CardType.Diamonds,CARD_VALUES[3])
+            
+        };
+
+        #endregion
+
+
     }
 }

@@ -5,7 +5,6 @@ using DG.Tweening;
 using Game.CardSystem.Base;
 using Game.CardSystem.Controllers;
 using NaughtyBezierCurves;
-using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -23,6 +22,11 @@ namespace Game.CardSystem.Managers
         {
             _cardManager = cardManager;
             _cardInputController = cardInputController;
+            
+            _cardManager.OnCardAdded += AddCardOnCurve;
+            _cardManager.OnCardDeleted += DeleteCardOnCurve;
+
+            _cardInputController.OnCardsSwapped += SwapCards;
         }
 
         public CardCurveManager()
@@ -32,11 +36,6 @@ namespace Game.CardSystem.Managers
 
         public void InitializeCurveValues(BezierCurve3D cardCurve)
         {
-            _cardManager.OnCardAdded += AddCardOnCurve;
-            _cardManager.OnCardDeleted += DeleteCardOnCurve;
-
-            _cardInputController.OnCardsSwapped += SwapCards;
-            
             float rotationZ = 55; 
             float begin = 1f / GameConfig.PLAYER_DECK_COUNT / 2;
             float zPosition = 0;
@@ -58,13 +57,8 @@ namespace Game.CardSystem.Managers
             if (cardCurve != null)
             {
                 cardCurve.CurrentCard = cardBase;
-
-                //  Observable.Timer(TimeSpan.FromSeconds(1f)).Subscribe(i =>
-               // {
-                    cardBase.transform.DOMove(cardCurve.Position, 0.5f);
-                    cardBase.transform.DORotate(cardCurve.Rotation, 0.5f);
-               // });
-
+                cardBase.transform.DOMove(cardCurve.Position, 0.5f);
+                cardBase.transform.DORotate(cardCurve.Rotation, 0.5f);
             }
         }
         
@@ -87,6 +81,25 @@ namespace Game.CardSystem.Managers
                 curve1.CurrentCard = card2;
                 curve2.CurrentCard = card1;
             }
+        }
+        public void SwapCards(int oldIndex, int newIndex)
+        {
+            var curve1 = _availableValues.FirstOrDefault(x => x.Index == oldIndex);
+            var curve2 = _availableValues.FirstOrDefault(x => x.Index == newIndex);
+
+            if (curve1 != null && curve2 != null)
+            {
+                var temp = curve1.CurrentCard;
+                curve1.CurrentCard = curve2.CurrentCard;
+                curve2.CurrentCard = temp;
+
+                DOTween.Sequence().
+                    Insert(0,curve1.CurrentCard.transform.DOMove(curve1.Position, 0.5f)).
+                    Insert( 0,curve1.CurrentCard.transform.DORotate(curve1.Rotation, 0.5f)).
+                    Insert(0,curve2.CurrentCard.transform.DOMove(curve2.Position, 0.5f)).
+                    Insert(0,curve2.CurrentCard.transform.DORotate(curve2.Rotation, 0.5f));
+            }
+
         }
 
         public CardCurveValue GetCardFromCurve(Vector2 pos)

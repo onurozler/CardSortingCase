@@ -1,4 +1,5 @@
-﻿using UniRx;
+﻿using Config;
+using UniRx;
 using UnityEngine;
 
 namespace Game.View
@@ -7,6 +8,8 @@ namespace Game.View
     {
         [SerializeField]
         private ButtonBase _withdrawCards;
+        [SerializeField] 
+        private ButtonBase _withdrawTestCards;
         [SerializeField]
         private ButtonBase _777Sort;
         [SerializeField]
@@ -17,6 +20,7 @@ namespace Game.View
         public void Initialize()
         {
             _withdrawCards.OnClickEvent += PublishWithdrawOnClick;
+            _withdrawTestCards.OnClickEvent += PublishWithdrawTestOnClick;
             _777Sort.OnClickEvent += PublishSameNumberSortOnClick;
             _123Sort.OnClickEvent += PublishConsecutiveSortOnClick;
             _smartSort.OnClickEvent += PublishSmartSortOnClick;
@@ -27,6 +31,12 @@ namespace Game.View
         private void PublishWithdrawOnClick()
         {
             MessageBroker.Default.Publish(PlayerButtonType.WITDHDRAW);
+        }
+
+        private void PublishWithdrawTestOnClick()
+        {
+            // Creating a tuple to send parameters 
+            MessageBroker.Default.Publish((PlayerButtonType.WITDHDRAW, GameConfig.TEST_DRAW_COMMAND));
         }
         
         private void PublishSameNumberSortOnClick()

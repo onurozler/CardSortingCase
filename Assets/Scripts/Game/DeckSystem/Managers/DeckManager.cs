@@ -22,6 +22,9 @@ namespace Game.DeckSystem.Managers
             _cardManager = cardManager;
             _assetManager = assetManager;
             
+            _cardManager.OnCardAdded += WitdrawCardFromDeck;
+            _cardManager.OnCardDeleted += PutCardToDeck;
+            
             GenerateCardDatas();
         }
         
@@ -32,9 +35,6 @@ namespace Game.DeckSystem.Managers
 
         private void GenerateCardDatas()
         {
-            _cardManager.OnCardAdded += WitdrawCardFromDeck;
-            _cardManager.OnCardDeleted += PutCardToDeck;
-            
             foreach (var cardType in GameConfig.CARD_TYPES)
             {
                 foreach (var cardVal in GameConfig.CARD_VALUES)
@@ -52,8 +52,8 @@ namespace Game.DeckSystem.Managers
         {
             var cardData = _cardDatas.GetRandomElementFromList();
             _cardDatas.Remove(cardData);
-            cardBase.Initialize(cardData,_assetManager.GetCardIcon(cardData.CardType),
-                _assetManager.GetPortraitIcon(cardData.CardValue.Portrait));
+            cardBase.Initialize(cardData, _assetManager.GetCardIcon(cardData.CardType),
+                    _assetManager.GetPortraitIcon(cardData.CardValue.Portrait));
         }
 
         private void PutCardToDeck(CardBase cardBase)

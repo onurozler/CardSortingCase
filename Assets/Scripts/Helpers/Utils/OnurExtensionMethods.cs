@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Game.CardSystem.Managers;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Utils
@@ -27,9 +29,14 @@ namespace Utils
             if (source != null) source.Invoke(firstValue, secondValue, thirdValue);
         }
 
-        public static List<T> Clone<T>(this List<T> listToClone) where T : ICloneable  
+        public static List<T> Clone<T>(this List<T> listToClone)  
         {  
-            return listToClone.Select(item => (T)item.Clone()).ToList();  
+            List<T> cloneList = new List<T>();
+            foreach (var item in listToClone)
+            {
+                cloneList.Add(item);
+            }
+            return cloneList;
         }
         
         public static T GetRandomElementFromList<T>(this List<T> list)
@@ -49,6 +56,40 @@ namespace Utils
                 group item.val by item.order into list
                 where list.Count() >= minLength
                 select list;
+        }
+        
+        public static List<List<CardCurveValue>> ConsecutiveSequence(this List<CardCurveValue> input, int minLength = 3)
+        {
+            input = input.OrderBy(x => x.CurrentCard.CardData.CardValue.Value).ToList();
+            List<List<CardCurveValue>> consecutiveList = new List<List<CardCurveValue>>();
+            List<CardCurveValue> tempList = new List<CardCurveValue>();
+            int consecutiveCounter = 0;
+            int index = 0;
+            while (input.Count > 0)
+            {
+                if (input[index+1].CurrentCard.CardData.CardValue.Value - input[index].CurrentCard.CardData.CardValue.Value == 1)
+                {
+                    consecutiveCounter++;
+                    tempList.Add(input[index]);
+                }
+                else
+                {
+                    if (consecutiveCounter >= minLength - 1)
+                    {
+                        tempList.Add(input[index+1]);
+                        consecutiveList.Add(tempList);
+                        tempList.Clear();
+                        index = 0;
+                    }
+
+                    consecutiveCounter = 0;
+                }
+
+                input.Remove(input[index]);
+                index++;
+            }
+
+            return consecutiveList;
         }
     }
 }
