@@ -1,7 +1,7 @@
-using Config;
 using Game.CardSystem.Base;
 using Game.CardSystem.Controllers;
 using Game.CardSystem.Managers;
+using Game.Config;
 using Game.DeckSystem.Managers;
 using Game.Managers;
 using Game.SortingSystem;

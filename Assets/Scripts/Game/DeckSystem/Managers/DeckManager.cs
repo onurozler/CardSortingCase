@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Config;
 using Game.CardSystem.Base;
 using Game.CardSystem.Managers;
 using Game.CardSystem.Model;
+using Game.Config;
 using Game.Managers;
 using Utils;
 using Zenject;
@@ -37,7 +37,7 @@ namespace Game.DeckSystem.Managers
             _cardDatas = new List<CardData>(GameConfig.DECK_COUNT);
         }
 
-        private void GenerateCardDatas()
+        public void GenerateCardDatas()
         {
             foreach (var cardType in GameConfig.CARD_TYPES)
             {
@@ -50,6 +50,11 @@ namespace Game.DeckSystem.Managers
                     _cardDatas.Add(cardData);
                 }
             }
+        }
+
+        public List<CardData> GetDeck()
+        {
+            return _cardDatas;
         }
         
         private void WithdrawTestCards(CardBase cardBase)

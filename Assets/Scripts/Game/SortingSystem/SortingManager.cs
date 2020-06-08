@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using Game.CardSystem.Managers;
-using System.Linq;
-using Config;
 using Game.CardSystem.Base;
-using UnityEngine;
+using System.Linq;
+using Game.Config;
 using Utils;
 using Zenject;
 
@@ -37,7 +36,7 @@ namespace Game.SortingSystem
             
             List<CardBase> nonConsecutives = new List<CardBase>();
             
-            List<List<CardBase>> allConsecutives = FindConsecutivesForTypes();
+            List<List<CardBase>> allConsecutives = FindConsecutivesForTypes(cardBases);
 
             if(allConsecutives.Count <= 0)
                 return;
@@ -49,9 +48,8 @@ namespace Game.SortingSystem
             _cardCurveManager.UpdateCurves(combinedConsecutives.Concat(nonConsecutives).ToList());
         }
 
-        private List<List<CardBase>> FindConsecutivesForTypes(int minLength = 3)
+        public List<List<CardBase>> FindConsecutivesForTypes(List<CardBase> cardBases,int minLength = 3)
         {
-            var cardBases = _cardManager.GetCards();
             List<List<CardBase>> cardCurveTypes = new List<List<CardBase>>();
 
             foreach (var cardType in GameConfig.CARD_TYPES)
@@ -111,7 +109,7 @@ namespace Game.SortingSystem
             
             var cardBases = _cardManager.GetCards();
             
-            List<List<CardBase>> sameNumbers = FindSameNumbers();
+            List<List<CardBase>> sameNumbers = FindSameNumbers(cardBases);
             List<CardBase> nonSameNumbers = new List<CardBase>();
             
             if(sameNumbers.Count <= 0)
@@ -124,9 +122,8 @@ namespace Game.SortingSystem
         }
         
         
-        private List<List<CardBase>> FindSameNumbers()
+        public List<List<CardBase>> FindSameNumbers(List<CardBase> cardBases)
         {
-            var cardBases = _cardManager.GetCards();
             var cardValues = cardBases.Select(x => x.CardData.CardValue.View).Distinct().ToList();
             List<List<CardBase>> sameNumbers = new List<List<CardBase>>();
             foreach (var viewPattern in cardValues)
@@ -152,26 +149,31 @@ namespace Game.SortingSystem
             if (_cardCurveManager.HasNull())
                 return;
             
-            var consecutive = FindConsecutivesForTypes();
-            var sameNumber = FindSameNumbers();
-
-            var smartGroups=  GenerateCombinedGroups(consecutive,sameNumber);
-            if(smartGroups.Count <= 0)
-                return;
-
-            var minSmart = smartGroups.OrderBy(x => x.SmartValue).First();
-            _cardCurveManager.UpdateCurves(minSmart.CardBases.SelectMany(x=>x).ToList());
-
+            _cardCurveManager.UpdateCurves(FindSmartGroup(_cardManager.GetCards()).SelectMany(x=>x).ToList());
         }
 
-        private List<SmartSortGroup> GenerateCombinedGroups(List<List<CardBase>> consecutive, List<List<CardBase>> sameNumber)
+        public List<List<CardBase>> FindSmartGroup(List<CardBase> cardBases)
+        {
+            var consecutive = FindConsecutivesForTypes(cardBases);
+            var sameNumber = FindSameNumbers(cardBases);
+
+            var smartGroups=  GenerateCombinedGroups(consecutive,sameNumber,cardBases);
+            if(smartGroups.Count <= 0)
+                return null;
+
+            var minSmart = smartGroups.OrderBy(x => x.SmartValue).First();
+            return minSmart.CardBases.Select(x => x).ToList();
+        }
+
+        private List<SmartSortGroup> GenerateCombinedGroups(List<List<CardBase>> consecutive, List<List<CardBase>> sameNumber,
+            List<CardBase> cardBases)
         {
             List<SmartSortGroup> smartSortGroups = new List<SmartSortGroup>();
             
             MatchBlocks(consecutive,sameNumber,smartSortGroups);
             MatchBlocks(sameNumber,consecutive,smartSortGroups);
 
-            FindSmartValues(smartSortGroups);
+            FindSmartValues(smartSortGroups, cardBases);
             
             return smartSortGroups;
         }
@@ -200,16 +202,32 @@ namespace Game.SortingSystem
             }
         }
         
-        private void FindSmartValues(List<SmartSortGroup> smartSortGroups)
+        private void FindSmartValues(List<SmartSortGroup> smartSortGroups, List<CardBase> cardBases)
         {
             foreach (var smartSortGroup in smartSortGroups)
             {
                 int value = 0;
-                var nonValues =_cardManager.NotContain(smartSortGroup.CardBases.SelectMany(x=>x).ToList());
+                var nonValues =FindNotGroupedCards(cardBases,smartSortGroup.CardBases.
+                    SelectMany(x=>x).ToList());
                 nonValues.ForEach(x=> value += x.CardData.CardValue.Value);
                 smartSortGroup.CardBases.Add(nonValues);
                 smartSortGroup.SmartValue = value;
             }
+        }
+        
+        private List<CardBase> FindNotGroupedCards(List<CardBase> cards,List<CardBase> cardBases)
+        {
+            List<CardBase> notInList = new List<CardBase>();
+            foreach (var card in cards)
+            {
+                var item = cardBases.FirstOrDefault(x => x.CardData.Equals(card.CardData));
+                if (item == null)
+                {
+                    notInList.Add(card);
+                }
+            }
+
+            return notInList;
         }
 
         public class SmartSortGroup

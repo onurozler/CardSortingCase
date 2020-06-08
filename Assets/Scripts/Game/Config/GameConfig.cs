@@ -1,8 +1,7 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Game.CardSystem.Model;
 
-namespace Config
+namespace Game.Config
 {
     public static class GameConfig
     {
@@ -62,6 +61,43 @@ namespace Config
             new CardData(CardType.Spades,CARD_VALUES[2]),
             new CardData(CardType.Diamonds,CARD_VALUES[3])
             
+        };
+
+        public static List<CardData> TEST_EXPECTED_CARD_DATAS_CONSECUTIVE = new List<CardData>
+        {
+            TEST_CARD_DATAS[5],
+            TEST_CARD_DATAS[10],
+            TEST_CARD_DATAS[2],
+            TEST_CARD_DATAS[4],
+            TEST_CARD_DATAS[1],
+            TEST_CARD_DATAS[9],
+            TEST_CARD_DATAS[7]
+        };
+
+        public static List<CardData> TEST_EXPECTED_CARD_DATAS_SAME = new List<CardData>()
+        {
+            TEST_CARD_DATAS[0],
+            TEST_CARD_DATAS[4],
+            TEST_CARD_DATAS[8],
+            TEST_CARD_DATAS[3],
+            TEST_CARD_DATAS[6],
+            TEST_CARD_DATAS[7],
+            TEST_CARD_DATAS[10]
+        };
+
+        public static List<CardData> TEST_EXPECTED_CARD_DATAS_SMART = new List<CardData>
+        {
+            TEST_CARD_DATAS[5],
+            TEST_CARD_DATAS[10],
+            TEST_CARD_DATAS[2],
+            TEST_CARD_DATAS[4],
+            TEST_CARD_DATAS[1],
+            TEST_CARD_DATAS[9],
+            TEST_CARD_DATAS[3],
+            TEST_CARD_DATAS[6],
+            TEST_CARD_DATAS[7],
+            TEST_CARD_DATAS[0],
+            TEST_CARD_DATAS[8]
         };
 
         #endregion

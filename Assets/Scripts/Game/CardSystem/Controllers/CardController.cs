@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Config;
 using Game.CardSystem.Managers;
+using Game.Config;
 using Game.SortingSystem;
 using Game.View;
 using NaughtyBezierCurves;

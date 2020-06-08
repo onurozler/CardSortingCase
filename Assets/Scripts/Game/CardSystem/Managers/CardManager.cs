@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Config;
 using Game.CardSystem.Base;
-using Game.CardSystem.Model;
+using System.Collections.Generic;
+using Game.Config;
 using Utils;
 using Zenject;
 
@@ -58,21 +56,7 @@ namespace Game.CardSystem.Managers
             
             _cardBases.Clear();
         }
-
-        public List<CardBase> NotContain(List<CardBase> cardBases)
-        {
-            List<CardBase> notInList = new List<CardBase>();
-            foreach (var card in _cardBases)
-            {
-                var item = cardBases.FirstOrDefault(x => x.CardData.Equals(card.CardData));
-                if (item == null)
-                {
-                    notInList.Add(card);
-                }
-            }
-
-            return notInList;
-        }
+        
         
         public List<CardBase> GetCards()
         {

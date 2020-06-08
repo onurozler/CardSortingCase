@@ -16,7 +16,7 @@ namespace Game.CardSystem.Model
             CardType = cardType;
             CardValue = cardCurveValue;
         }
-
+        
         public bool Equals(CardData other)
         {
             return this.CardType == other.CardType && this.CardValue.View.Equals(other.CardValue.View) &&

@@ -1,4 +1,4 @@
-﻿using Config;
+﻿using Game.Config;
 using UniRx;
 using UnityEngine;
 

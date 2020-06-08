@@ -15,6 +15,9 @@ namespace Game.CardSystem.Base
         {
             CardData = cardData;
             
+            if(numberIcon == null && mainIcon == null)
+                return;
+            
             Number.text = CardData.CardValue.View;
             Number.color = (int) CardData.CardType % 2 == 0 ? Color.red : Color.black;
             NumberIcon.sprite = numberIcon;

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Game.CardSystem.Managers;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Utils
