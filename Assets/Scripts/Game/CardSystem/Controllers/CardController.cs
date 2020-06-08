@@ -69,6 +69,7 @@ namespace Game.CardSystem.Controllers
                     _sortingManager.SameNumberSort();
                     break;
                 case PlayerButtonType.SMARTSORT:
+                    _sortingManager.SmartSort();
                     break;
             }
         }

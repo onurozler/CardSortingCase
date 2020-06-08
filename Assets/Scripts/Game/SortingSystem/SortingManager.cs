@@ -3,7 +3,6 @@ using Game.CardSystem.Managers;
 using System.Linq;
 using Config;
 using Game.CardSystem.Base;
-using ModestTree;
 using UnityEngine;
 using Utils;
 using Zenject;
@@ -36,21 +35,13 @@ namespace Game.SortingSystem
             
             var cardBases = _cardManager.GetCards();
             
-            List<List<CardBase>> cardCurveTypes = new List<List<CardBase>>();
             List<CardBase> nonConsecutives = new List<CardBase>();
-            foreach (var cardType in GameConfig.CARD_TYPES)
-            {
-                cardCurveTypes.Add(cardBases
-                    .Where(x => x.CardData.CardType == cardType).ToList());
-            }
+            
+            List<List<CardBase>> allConsecutives = FindConsecutivesForTypes();
 
-            List<List<CardBase>> allConsecutives = new List<List<CardBase>>();
-            foreach (var type in cardCurveTypes)
-            {
-                var consecutive = FindConsecutivesForTypes(type);
-                if(consecutive != null)
-                    allConsecutives.Add(consecutive);
-            }
+            if(allConsecutives.Count <= 0)
+                return;
+            
             var combinedConsecutives = 
                 allConsecutives.OrderByDescending(x => x.Count).SelectMany(x=>x).ToList();
             nonConsecutives = cardBases.Where(x => !combinedConsecutives.Contains(x)).ToList();
@@ -58,37 +49,54 @@ namespace Game.SortingSystem
             _cardCurveManager.UpdateCurves(combinedConsecutives.Concat(nonConsecutives).ToList());
         }
 
-        private List<CardBase> FindConsecutivesForTypes(List<CardBase> cardCurveTypes, int minLength = 3)
+        private List<List<CardBase>> FindConsecutivesForTypes(int minLength = 3)
         {
+            var cardBases = _cardManager.GetCards();
+            List<List<CardBase>> cardCurveTypes = new List<List<CardBase>>();
+
+            foreach (var cardType in GameConfig.CARD_TYPES)
+            {
+                cardCurveTypes.Add(cardBases
+                    .Where(x => x.CardData.CardType == cardType).ToList());
+            }
+            
             if (cardCurveTypes.Count < minLength)
                 return null;
             
-            List<List<CardBase>> consecutivesForType = new List<List<CardBase>>();
-            List<CardBase> tempList = new List<CardBase>();
-            cardCurveTypes = cardCurveTypes.OrderBy(x => x.CardData.CardValue.Value).ToList();
+            List<List<CardBase>> allConsecutives = new List<List<CardBase>>();
 
-            int consecutiveCounter = 0;
-            for (int i = 0; i < cardCurveTypes.Count; i++)
+            foreach (var type in cardCurveTypes)
             {
-                if (i != cardCurveTypes.Count-1 && cardCurveTypes[i + 1].CardData.CardValue.Value - 
-                    cardCurveTypes[i].CardData.CardValue.Value == 1)
+                List<List<CardBase>> consecutivesForType = new List<List<CardBase>>();
+                List<CardBase> tempList = new List<CardBase>();
+                var typeOrdered = type.OrderBy(x => x.CardData.CardValue.Value).ToList();
+            
+                int consecutiveCounter = 0;
+                for (int i = 0; i < typeOrdered.Count; i++)
                 {
-                    tempList.Add(cardCurveTypes[i]);
-                    consecutiveCounter++;
-                }
-                else
-                {
-                    if (consecutiveCounter >= minLength - 1)
+                    if (i != typeOrdered.Count-1 && typeOrdered[i + 1].CardData.CardValue.Value - 
+                        typeOrdered[i].CardData.CardValue.Value == 1)
                     {
-                        tempList.Add(cardCurveTypes[i]);
-                        consecutivesForType.Add(tempList.Clone());
-                        tempList.Clear();
+                        tempList.Add(typeOrdered[i]);
+                        consecutiveCounter++;
                     }
+                    else
+                    {
+                        if (consecutiveCounter >= minLength - 1)
+                        {
+                            tempList.Add(typeOrdered[i]);
+                            consecutivesForType.Add(tempList.Clone());
+                            tempList.Clear();
+                        }
                     
-                    consecutiveCounter = 0;
+                        consecutiveCounter = 0;
+                    }
                 }
+
+                allConsecutives = allConsecutives.Concat(consecutivesForType).ToList();
             }
-            return consecutivesForType.SelectMany(x => x).ToList();
+
+            return allConsecutives;
         }
 
         #endregion
@@ -102,9 +110,25 @@ namespace Game.SortingSystem
                 return;
             
             var cardBases = _cardManager.GetCards();
+            
+            List<List<CardBase>> sameNumbers = FindSameNumbers();
+            List<CardBase> nonSameNumbers = new List<CardBase>();
+            
+            if(sameNumbers.Count <= 0)
+                return;
+            
+            var sameNumbersCombined = sameNumbers.SelectMany(x => x).ToList();
+            nonSameNumbers = cardBases.Where(x => !sameNumbersCombined.Contains(x)).ToList();
+            
+            _cardCurveManager.UpdateCurves(sameNumbersCombined.Concat(nonSameNumbers).ToList());
+        }
+        
+        
+        private List<List<CardBase>> FindSameNumbers()
+        {
+            var cardBases = _cardManager.GetCards();
             var cardValues = cardBases.Select(x => x.CardData.CardValue.View).Distinct().ToList();
             List<List<CardBase>> sameNumbers = new List<List<CardBase>>();
-            List<CardBase> nonSameNumbers = new List<CardBase>();
             foreach (var viewPattern in cardValues)
             {
                 var curve = cardBases.Where(x => 
@@ -115,13 +139,90 @@ namespace Game.SortingSystem
                     sameNumbers.Add(curve);
                 }
             }
-
-            var sameNumbersCombined = sameNumbers.SelectMany(x => x).ToList();
-            nonSameNumbers = cardBases.Where(x => !sameNumbersCombined.Contains(x)).ToList();
-            
-            _cardCurveManager.UpdateCurves(sameNumbersCombined.Concat(nonSameNumbers).ToList());
+            return sameNumbers;
         }
 
+        #endregion
+
+
+        #region SmartSort
+
+        public void SmartSort()
+        {
+            if (_cardCurveManager.HasNull())
+                return;
+            
+            var consecutive = FindConsecutivesForTypes();
+            var sameNumber = FindSameNumbers();
+
+            var smartGroups=  GenerateCombinedGroups(consecutive,sameNumber);
+            if(smartGroups.Count <= 0)
+                return;
+
+            var minSmart = smartGroups.OrderBy(x => x.SmartValue).First();
+            _cardCurveManager.UpdateCurves(minSmart.CardBases.SelectMany(x=>x).ToList());
+
+        }
+
+        private List<SmartSortGroup> GenerateCombinedGroups(List<List<CardBase>> consecutive, List<List<CardBase>> sameNumber)
+        {
+            List<SmartSortGroup> smartSortGroups = new List<SmartSortGroup>();
+            
+            MatchBlocks(consecutive,sameNumber,smartSortGroups);
+            MatchBlocks(sameNumber,consecutive,smartSortGroups);
+
+            FindSmartValues(smartSortGroups);
+            
+            return smartSortGroups;
+        }
+
+        private void MatchBlocks(List<List<CardBase>> blockOne, List<List<CardBase>> blockTwo, List<SmartSortGroup> smartSortGroups)
+        {
+            foreach (var consecutiveBlock in blockOne)
+            {
+                var consClone = consecutiveBlock.Clone();
+                SmartSortGroup smartSortGroup = new SmartSortGroup();
+                foreach (var sameNumberBlock in blockTwo)
+                {
+                    var sameNumberClone = sameNumberBlock.Clone();
+                    var sameValue = consClone.Intersect(sameNumberClone).ToList();
+                    if (sameValue.Count == 1)
+                    {
+                        if (consClone.Count > sameNumberClone.Count)
+                            consClone.Remove(sameValue[0]);
+                        else
+                            sameNumberClone.Remove(sameValue[0]);
+                    }
+                    smartSortGroup.CardBases.Add(sameNumberClone);
+                }
+                smartSortGroup.CardBases.Add(consClone);
+                smartSortGroups.Add(smartSortGroup);
+            }
+        }
+        
+        private void FindSmartValues(List<SmartSortGroup> smartSortGroups)
+        {
+            foreach (var smartSortGroup in smartSortGroups)
+            {
+                int value = 0;
+                var nonValues =_cardManager.NotContain(smartSortGroup.CardBases.SelectMany(x=>x).ToList());
+                nonValues.ForEach(x=> value += x.CardData.CardValue.Value);
+                smartSortGroup.CardBases.Add(nonValues);
+                smartSortGroup.SmartValue = value;
+            }
+        }
+
+        public class SmartSortGroup
+        {
+            public List<List<CardBase>> CardBases;
+            public int SmartValue;
+
+            public SmartSortGroup()
+            {
+                CardBases = new List<List<CardBase>>();
+            }
+        }
+        
         #endregion
     }
 }
