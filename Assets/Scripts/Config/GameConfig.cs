@@ -12,6 +12,7 @@ namespace Config
 
         public static float CARD_SELECTION_THRESHOLD = 3f;
         public static float WITHDRAW_SECONDS = 0.2f;
+        public static float ROTATION_START = 55;
 
         #region Card Options
 

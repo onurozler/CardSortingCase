@@ -37,7 +37,7 @@ namespace Game.CardSystem.Managers
 
         public void InitializeCurveValues(BezierCurve3D cardCurve)
         {
-            float rotationZ = 55; 
+            float rotationZ = GameConfig.ROTATION_START; 
             float begin = 1f / GameConfig.PLAYER_DECK_COUNT / 2;
             float zPosition = 0;
             
@@ -83,20 +83,35 @@ namespace Game.CardSystem.Managers
                 curve2.CurrentCard = card1;
             }
         }
-        public void SwapCards(int oldIndex, int newIndex)
+        
+        public void UpdateCurves(List<CardBase> cardBases)
         {
-            var curve1 = _availableValues.FirstOrDefault(x => x.Index == oldIndex);
+            for (int i = 0; i < cardBases.Count; i++)
+            {
+                _availableValues[i].CurrentCard = cardBases[i];
+                DOTween.Sequence().
+                    Insert(0,_availableValues[i].CurrentCard.transform.DOMove(_availableValues[i].Position, 0.5f)).
+                    Insert(0,_availableValues[i].CurrentCard.transform.DORotate(_availableValues[i].Rotation, 0.5f));
+            }
+        }
+        
+        public void SwapCards(int cardCurveValue, int newIndex)
+        {
+            var curve1 = _availableValues.FirstOrDefault(x => x.Index == cardCurveValue);;
             var curve2 = _availableValues.FirstOrDefault(x => x.Index == newIndex);
 
             if (curve1 != null && curve2 != null)
             {
+                if(curve1.Index == curve2.Index)
+                    return;
+                
                 var temp = curve1.CurrentCard;
                 curve1.CurrentCard = curve2.CurrentCard;
                 curve2.CurrentCard = temp;
 
                 DOTween.Sequence().
                     Insert(0,curve1.CurrentCard.transform.DOMove(curve1.Position, 0.5f)).
-                    Insert( 0,curve1.CurrentCard.transform.DORotate(curve1.Rotation, 0.5f)).
+                    Insert(0,curve1.CurrentCard.transform.DORotate(curve1.Rotation, 0.5f)).
                     Insert(0,curve2.CurrentCard.transform.DOMove(curve2.Position, 0.5f)).
                     Insert(0,curve2.CurrentCard.transform.DORotate(curve2.Rotation, 0.5f));
             }

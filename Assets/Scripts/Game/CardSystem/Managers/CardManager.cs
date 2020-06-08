@@ -56,5 +56,10 @@ namespace Game.CardSystem.Managers
             
             _cardBases.Clear();
         }
+
+        public List<CardBase> GetCards()
+        {
+            return _cardBases;
+        }
     }
 }

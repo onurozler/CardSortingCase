@@ -213,6 +213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _withdrawCards: {fileID: 1246767779}
+  _withdrawTestCards: {fileID: 569095777}
   _777Sort: {fileID: 1738473197}
   _123Sort: {fileID: 2111667657}
   _smartSort: {fileID: 1581481367}
@@ -539,7 +540,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Test Draw
+  m_Text: Test Withdraw
 --- !u!222 &447779611
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -2,6 +2,8 @@
 using Game.CardSystem.Managers;
 using System.Linq;
 using Config;
+using Game.CardSystem.Base;
+using ModestTree;
 using UnityEngine;
 using Utils;
 using Zenject;
@@ -11,11 +13,13 @@ namespace Game.SortingSystem
     public class SortingManager
     {
         private CardCurveManager _cardCurveManager;
+        private CardManager _cardManager;
         
         [Inject]
-        private void OnInstaller(CardCurveManager cardCurveManager)
+        private void OnInstaller(CardCurveManager cardCurveManager,CardManager cardManager)
         {
             _cardCurveManager = cardCurveManager;
+            _cardManager = cardManager;
         }
         
         public SortingManager()
@@ -27,51 +31,64 @@ namespace Game.SortingSystem
 
         public void ConsecutiveSort()
         {
-            var cardCurveList = _cardCurveManager.GetCardCurveValues();
+            if (_cardCurveManager.HasNull())
+                return;
             
-            List<List<CardCurveValue>> cardCurveTypes = new List<List<CardCurveValue>>();
+            var cardBases = _cardManager.GetCards();
+            
+            List<List<CardBase>> cardCurveTypes = new List<List<CardBase>>();
+            List<CardBase> nonConsecutives = new List<CardBase>();
             foreach (var cardType in GameConfig.CARD_TYPES)
             {
-                cardCurveTypes.Add(cardCurveList
-                    .Where(x => x.CurrentCard.CardData.CardType == cardType).ToList());
+                cardCurveTypes.Add(cardBases
+                    .Where(x => x.CardData.CardType == cardType).ToList());
             }
 
-            /*
-            var sa = cardCurveTypes[0].ConsecutiveSequence();
-
-            foreach (var ass in sa)
+            List<List<CardBase>> allConsecutives = new List<List<CardBase>>();
+            foreach (var type in cardCurveTypes)
             {
-                foreach (var test in ass)
-                {
-                    Debug.Log(test);
-                }
-            }*/
+                var consecutive = FindConsecutivesForTypes(type);
+                if(consecutive != null)
+                    allConsecutives.Add(consecutive);
+            }
+            var combinedConsecutives = 
+                allConsecutives.OrderByDescending(x => x.Count).SelectMany(x=>x).ToList();
+            nonConsecutives = cardBases.Where(x => !combinedConsecutives.Contains(x)).ToList();
 
-            //List<CardCurveValue> nonConsecutives;
-            //var consecutiveValues = FindConsecutiveAndNonConsecutiveValues(cardCurveTypes, out nonConsecutives);
+            _cardCurveManager.UpdateCurves(combinedConsecutives.Concat(nonConsecutives).ToList());
         }
 
-        
-        private List<List<CardCurveValue>> FindConsecutiveAndNonConsecutiveValues
-            (List<List<CardCurveValue>> cardCurveTypes, out List<CardCurveValue> nonConsecutives)
+        private List<CardBase> FindConsecutivesForTypes(List<CardBase> cardCurveTypes, int minLength = 3)
         {
-            List<List<CardCurveValue>> allConsecutiveValues = new List<List<CardCurveValue>>();
-            nonConsecutives = new List<CardCurveValue>();
+            if (cardCurveTypes.Count < minLength)
+                return null;
+            
+            List<List<CardBase>> consecutivesForType = new List<List<CardBase>>();
+            List<CardBase> tempList = new List<CardBase>();
+            cardCurveTypes = cardCurveTypes.OrderBy(x => x.CardData.CardValue.Value).ToList();
 
-            foreach (var cardType in cardCurveTypes)
+            int consecutiveCounter = 0;
+            for (int i = 0; i < cardCurveTypes.Count; i++)
             {
-                var selectedType =cardType.Select(x => x.CurrentCard.CardData.CardValue.Value);
-                var consecutiveValues = selectedType.ConsecutiveSequences().ToList();
-                foreach (var consValue in consecutiveValues)
+                if (i != cardCurveTypes.Count-1 && cardCurveTypes[i + 1].CardData.CardValue.Value - 
+                    cardCurveTypes[i].CardData.CardValue.Value == 1)
                 {
-                   var consCardCurveValue = 
-                       cardType.Where(x => consValue.Contains(x.CurrentCard.CardData.CardValue.Value)).ToList();
-
-                   allConsecutiveValues.Add(consCardCurveValue);
+                    tempList.Add(cardCurveTypes[i]);
+                    consecutiveCounter++;
+                }
+                else
+                {
+                    if (consecutiveCounter >= minLength - 1)
+                    {
+                        tempList.Add(cardCurveTypes[i]);
+                        consecutivesForType.Add(tempList.Clone());
+                        tempList.Clear();
+                    }
+                    
+                    consecutiveCounter = 0;
                 }
             }
-
-            return allConsecutiveValues;
+            return consecutivesForType.SelectMany(x => x).ToList();
         }
 
         #endregion
@@ -79,27 +96,30 @@ namespace Game.SortingSystem
 
         #region 777Sort/SameNumberSort
 
-        public List<CardCurveValue> SameNumberSort()
+        public void SameNumberSort()
         {
             if (_cardCurveManager.HasNull())
-                return null;
+                return;
             
-            var nonSameValue = _cardCurveManager.GetCardCurveValues().Clone();
-            var cardValues = nonSameValue.Select(x => x.CurrentCard.CardData.CardValue.View).Distinct().ToList();
-            List<List<CardCurveValue>> sameNumbers = new List<List<CardCurveValue>>();
+            var cardBases = _cardManager.GetCards();
+            var cardValues = cardBases.Select(x => x.CardData.CardValue.View).Distinct().ToList();
+            List<List<CardBase>> sameNumbers = new List<List<CardBase>>();
+            List<CardBase> nonSameNumbers = new List<CardBase>();
             foreach (var viewPattern in cardValues)
             {
-                var curve = nonSameValue.Where(x => 
-                    x.CurrentCard.CardData.CardValue.View == viewPattern).Take(4).ToList();
+                var curve = cardBases.Where(x => 
+                    x.CardData.CardValue.View == viewPattern).Take(4).ToList();
 
                 if (curve.Count >= 3)
                 {
                     sameNumbers.Add(curve);
-                    nonSameValue.RemoveAll(x => curve.Contains(x));
                 }
             }
+
+            var sameNumbersCombined = sameNumbers.SelectMany(x => x).ToList();
+            nonSameNumbers = cardBases.Where(x => !sameNumbersCombined.Contains(x)).ToList();
             
-            return sameNumbers.SelectMany(x=>x).ToList();
+            _cardCurveManager.UpdateCurves(sameNumbersCombined.Concat(nonSameNumbers).ToList());
         }
 
         #endregion

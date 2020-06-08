@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Config;
 using Game.CardSystem.Managers;
 using Game.SortingSystem;
@@ -62,10 +63,10 @@ namespace Game.CardSystem.Controllers
                     WithdrawCards();
                     break;
                 case PlayerButtonType.CONSECUTIVE_SORT:
-                    SortConsecutive();
+                    _sortingManager.ConsecutiveSort();
                     break;
                 case PlayerButtonType.SAME_NUMBER_SORT:
-                    SortSameNumbers();
+                    _sortingManager.SameNumberSort();
                     break;
                 case PlayerButtonType.SMARTSORT:
                     break;
@@ -100,21 +101,6 @@ namespace Game.CardSystem.Controllers
             });
         }
 
-        private void SortConsecutive()
-        {
-            _sortingManager.ConsecutiveSort();
-        }
-        
-        private void SortSameNumbers()
-        {
-            var sameNumbers = _sortingManager.SameNumberSort();
-            if (sameNumbers != null)
-            {
-                int index = 1;
-                sameNumbers.ForEach(x => _cardCurveManager.SwapCards(x.Index, index++));
-            }
-        }
-        
         #endregion
 
     }

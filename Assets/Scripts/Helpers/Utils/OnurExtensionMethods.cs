@@ -44,52 +44,5 @@ namespace Utils
             int rnd = Random.Range(0, list.Count);
             return list[rnd];
         }
-
-        public static IEnumerable<IEnumerable<int>> ConsecutiveSequences(this IEnumerable<int> input, int minLength = 3)
-        {
-            int order = 0;
-            var inorder = new SortedSet<int>(input);
-            return from item in new[] { new { order = 0, val = inorder.First() } }
-                    .Concat(
-                        inorder.Zip(inorder.Skip(1), (x, val) =>
-                            new { order = x + 1 == val ? order : ++order, val }))
-                group item.val by item.order into list
-                where list.Count() >= minLength
-                select list;
-        }
-        
-        public static List<List<CardCurveValue>> ConsecutiveSequence(this List<CardCurveValue> input, int minLength = 3)
-        {
-            input = input.OrderBy(x => x.CurrentCard.CardData.CardValue.Value).ToList();
-            List<List<CardCurveValue>> consecutiveList = new List<List<CardCurveValue>>();
-            List<CardCurveValue> tempList = new List<CardCurveValue>();
-            int consecutiveCounter = 0;
-            int index = 0;
-            while (input.Count > 0)
-            {
-                if (input[index+1].CurrentCard.CardData.CardValue.Value - input[index].CurrentCard.CardData.CardValue.Value == 1)
-                {
-                    consecutiveCounter++;
-                    tempList.Add(input[index]);
-                }
-                else
-                {
-                    if (consecutiveCounter >= minLength - 1)
-                    {
-                        tempList.Add(input[index+1]);
-                        consecutiveList.Add(tempList);
-                        tempList.Clear();
-                        index = 0;
-                    }
-
-                    consecutiveCounter = 0;
-                }
-
-                input.Remove(input[index]);
-                index++;
-            }
-
-            return consecutiveList;
-        }
     }
 }
