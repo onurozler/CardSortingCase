@@ -47,7 +47,7 @@ namespace Game.CardSystem.Controllers
         private void SelectClosestCard(Vector2 mousePos)
         {
             var closeCurve = _cardCurveManager.GetCardFromCurve(mousePos);
-            if(closeCurve == null)
+            if(closeCurve == null || _cardCurveManager.HasNull())
                 return;
             
             if (_selectedCurve == null)

@@ -724,9 +724,6 @@
           </e>
         </e>
         <e p="Scripts" t="Include">
-          <e p="Config" t="Include">
-            <e p="GameConfig.cs" t="Include" />
-          </e>
           <e p="Game" t="Include">
             <e p="CardSystem" t="Include">
               <e p="Base" t="Include">
@@ -744,6 +741,9 @@
               <e p="Model" t="Include">
                 <e p="CardData.cs" t="Include" />
               </e>
+            </e>
+            <e p="Config" t="Include">
+              <e p="GameConfig.cs" t="Include" />
             </e>
             <e p="DeckSystem" t="Include">
               <e p="Managers" t="Include">
@@ -770,9 +770,18 @@
           <e p="Installers" t="Include">
             <e p="GameInstaller.cs" t="Include" />
           </e>
+          <e p="Tests" t="Include">
+            <e p="EditMode" t="Include">
+              <e p="DeckTest.cs" t="Include" />
+              <e p="SortManagerTest.cs" t="Include" />
+            </e>
+          </e>
         </e>
       </e>
       <e p="CardSortingCase.sln" t="IncludeFlat" />
+      <e p="EditMode.csproj" t="IncludeRecursive" />
+      <e p="Game.csproj" t="IncludeRecursive" />
+      <e p="Helpers.csproj" t="IncludeRecursive" />
       <e p="NaughtyBezierCurves.Core.csproj" t="IncludeRecursive" />
       <e p="NaughtyBezierCurves.Editor.csproj" t="IncludeRecursive" />
       <e p="obj" t="ExcludeRecursive" />

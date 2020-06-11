@@ -86,6 +86,9 @@ namespace Game.CardSystem.Managers
         
         public void UpdateCurves(List<CardBase> cardBases)
         {
+            if(cardBases == null)
+                return;
+            
             for (int i = 0; i < cardBases.Count; i++)
             {
                 _availableValues[i].CurrentCard = cardBases[i];

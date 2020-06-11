@@ -3,6 +3,7 @@ using Game.CardSystem.Managers;
 using Game.CardSystem.Base;
 using System.Linq;
 using Game.Config;
+using UnityEngine;
 using Utils;
 using Zenject;
 
@@ -148,8 +149,14 @@ namespace Game.SortingSystem
         {
             if (_cardCurveManager.HasNull())
                 return;
+
+            var smartGroup = FindSmartGroup(_cardManager.GetCards());
+
+            List<CardBase> combinedSmartGroup = null;
+            if(smartGroup != null)
+                combinedSmartGroup = smartGroup.SelectMany(x => x).ToList();
             
-            _cardCurveManager.UpdateCurves(FindSmartGroup(_cardManager.GetCards()).SelectMany(x=>x).ToList());
+            _cardCurveManager.UpdateCurves(combinedSmartGroup);
         }
 
         public List<List<CardBase>> FindSmartGroup(List<CardBase> cardBases)
