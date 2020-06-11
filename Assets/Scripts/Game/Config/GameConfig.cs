@@ -65,13 +65,17 @@ namespace Game.Config
 
         public static List<CardData> TEST_EXPECTED_CARD_DATAS_CONSECUTIVE = new List<CardData>
         {
-            TEST_CARD_DATAS[5],
-            TEST_CARD_DATAS[10],
-            TEST_CARD_DATAS[2],
             TEST_CARD_DATAS[4],
             TEST_CARD_DATAS[1],
             TEST_CARD_DATAS[9],
-            TEST_CARD_DATAS[7]
+            TEST_CARD_DATAS[7],
+            TEST_CARD_DATAS[5],
+            TEST_CARD_DATAS[10],
+            TEST_CARD_DATAS[2],
+            TEST_CARD_DATAS[0],
+            TEST_CARD_DATAS[3],
+            TEST_CARD_DATAS[6],
+            TEST_CARD_DATAS[8]
         };
 
         public static List<CardData> TEST_EXPECTED_CARD_DATAS_SAME = new List<CardData>()
@@ -82,7 +86,11 @@ namespace Game.Config
             TEST_CARD_DATAS[3],
             TEST_CARD_DATAS[6],
             TEST_CARD_DATAS[7],
-            TEST_CARD_DATAS[10]
+            TEST_CARD_DATAS[10],
+            TEST_CARD_DATAS[1],
+            TEST_CARD_DATAS[2],
+            TEST_CARD_DATAS[5],
+            TEST_CARD_DATAS[9]
         };
 
         public static List<CardData> TEST_EXPECTED_CARD_DATAS_SMART = new List<CardData>

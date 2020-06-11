@@ -3,6 +3,7 @@ using System.Linq;
 using DG.Tweening;
 using Game.CardSystem.Base;
 using Game.CardSystem.Controllers;
+using Game.CardSystem.Model;
 using Game.Config;
 using NaughtyBezierCurves;
 using UnityEngine;
@@ -43,7 +44,10 @@ namespace Game.CardSystem.Managers
             
             for (int i = 0; i < GameConfig.PLAYER_DECK_COUNT; i++)
             {
-                _availableValues.Add(new CardCurveValue(null,cardCurve.GetPoint(begin),
+                var pos = cardCurve.GetPoint(begin);
+                pos.z = zPosition;
+                
+                _availableValues.Add(new CardCurveValue(null,pos,
                     new Vector3(0,0,rotationZ)));
                 
                 zPosition += 0.2f;
@@ -83,18 +87,26 @@ namespace Game.CardSystem.Managers
                 curve2.CurrentCard = card1;
             }
         }
-        
-        public void UpdateCurves(List<CardBase> cardBases)
+
+        public void UpdateCurves(List<CardData> cardDatas)
         {
-            if(cardBases == null)
+            if(cardDatas == null)
                 return;
+
+            var allCards = _availableValues.Select(x => x.CurrentCard).ToList();
             
-            for (int i = 0; i < cardBases.Count; i++)
+            for (int i = 0; i < cardDatas.Count; i++)
             {
-                _availableValues[i].CurrentCard = cardBases[i];
-                DOTween.Sequence().
-                    Insert(0,_availableValues[i].CurrentCard.transform.DOMove(_availableValues[i].Position, 0.5f)).
-                    Insert(0,_availableValues[i].CurrentCard.transform.DORotate(_availableValues[i].Rotation, 0.5f));
+                var card = allCards.FirstOrDefault(x=>x.CardData.Equals(cardDatas[i]));
+
+                if (card != null)
+                {
+                    _availableValues[i].CurrentCard = card;
+                    DOTween.Sequence()
+                        .Insert(0, _availableValues[i].CurrentCard.transform.DOMove(_availableValues[i].Position, 0.5f))
+                        .Insert(0,
+                            _availableValues[i].CurrentCard.transform.DORotate(_availableValues[i].Rotation, 0.5f));
+                }
             }
         }
 

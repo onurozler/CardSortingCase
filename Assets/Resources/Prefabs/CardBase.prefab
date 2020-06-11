@@ -118,7 +118,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1809559047}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.05}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6669807841137227924}
@@ -162,7 +162,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: -1080677192667648205, guid: effdc233f56903e4aa52fd4da19369db,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -200,7 +200,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1844475694}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.94, y: 1.39, z: 0}
+  m_LocalPosition: {x: -0.94, y: 1.39, z: -0.05}
   m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_Children: []
   m_Father: {fileID: 6669807841137227924}
@@ -244,7 +244,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: -1080677192667648205, guid: effdc233f56903e4aa52fd4da19369db,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -357,3 +357,9 @@ MonoBehaviour:
   Number: {fileID: 850644821}
   NumberIcon: {fileID: 1844475696}
   MainIcon: {fileID: 1809559049}
+  CardData:
+    CardType: 0
+    CardValue:
+      View: 
+      Value: 0
+      Portrait: 

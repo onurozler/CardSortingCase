@@ -1,6 +1,8 @@
 ﻿using System;
 using Game.CardSystem.Base;
 using System.Collections.Generic;
+using System.Linq;
+using Game.CardSystem.Model;
 using Game.Config;
 using Utils;
 using Zenject;
@@ -58,9 +60,9 @@ namespace Game.CardSystem.Managers
         }
         
         
-        public List<CardBase> GetCards()
+        public List<CardData> GetCardsDatas()
         {
-            return _cardBases;
+            return _cardBases.Select(x=>x.CardData).ToList();
         }
     }
 }

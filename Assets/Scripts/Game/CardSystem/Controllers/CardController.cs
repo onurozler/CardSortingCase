@@ -63,13 +63,19 @@ namespace Game.CardSystem.Controllers
                     WithdrawCards();
                     break;
                 case PlayerButtonType.CONSECUTIVE_SORT:
-                    _sortingManager.ConsecutiveSort();
+                    var consecutiveDatas = _sortingManager.ConsecutiveSort(_cardManager.GetCardsDatas());
+                    if(consecutiveDatas != null && !_cardCurveManager.HasNull())
+                        _cardCurveManager.UpdateCurves(consecutiveDatas);
                     break;
                 case PlayerButtonType.SAME_NUMBER_SORT:
-                    _sortingManager.SameNumberSort();
+                    var sortedDatas = _sortingManager.SameNumberSort(_cardManager.GetCardsDatas());
+                    if(sortedDatas != null && !_cardCurveManager.HasNull())
+                        _cardCurveManager.UpdateCurves(sortedDatas);
                     break;
                 case PlayerButtonType.SMARTSORT:
-                    _sortingManager.SmartSort();
+                    var sortedSmart =  _sortingManager.SmartSort(_cardManager.GetCardsDatas());
+                    if(sortedSmart != null && !_cardCurveManager.HasNull())
+                        _cardCurveManager.UpdateCurves(sortedSmart);
                     break;
             }
         }
