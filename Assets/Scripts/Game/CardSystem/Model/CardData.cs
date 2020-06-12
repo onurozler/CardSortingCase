@@ -3,7 +3,7 @@
 namespace Game.CardSystem.Model
 {
     [Serializable]
-    public class CardData
+    public class CardData : IEquatable<CardData>
     {
         public CardType CardType;
         public CardValue CardValue;
@@ -19,6 +19,9 @@ namespace Game.CardSystem.Model
         
         public bool Equals(CardData other)
         {
+            if (other == null)
+                return false;
+            
             return this.CardType == other.CardType && this.CardValue.View.Equals(other.CardValue.View) &&
                    this.CardValue.Value == other.CardValue.Value;
         }

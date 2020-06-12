@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using Game.CardSystem.Managers;
 using System.Linq;
 using Game.CardSystem.Model;
 using Game.Config;
 using Utils;
-using Zenject;
 
 namespace Game.SortingSystem
 {
@@ -31,8 +29,7 @@ namespace Game.SortingSystem
             
             foreach (var cardData in cardDatas)
             {
-                var same = combinedConsecutives.FirstOrDefault(x => x.Equals(cardData));
-                if (same == null)
+                if (!combinedConsecutives.Contains(cardData))
                 {
                     nonConsecutives.Add(cardData);
                 }
@@ -107,8 +104,7 @@ namespace Game.SortingSystem
 
             foreach (var cardData in cardDatas)
             {
-                var same = sameNumbersCombined.FirstOrDefault(x => x.Equals(cardData));
-                if (same == null)
+                if (!sameNumbersCombined.Contains(cardData))
                 {
                     nonSameNumbers.Add(cardData);
                 }
@@ -219,8 +215,7 @@ namespace Game.SortingSystem
             List<CardData> notInList = new List<CardData>();
             foreach (var card in cards)
             {
-                var item = cardBases.FirstOrDefault(x => x.Equals(card));
-                if (item == null)
+                if (!cardBases.Contains(card))
                 {
                     notInList.Add(card);
                 }
